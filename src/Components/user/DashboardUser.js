@@ -1,0 +1,459 @@
+import React from "react";
+import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { SlArrowDown } from "react-icons/sl";
+import { SlArrowUp } from "react-icons/sl";
+
+export default function DashboardUser() {
+  const [demandes, setDemandes] = useState([]);
+  const [errorBack, setErrorBack] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState("All");
+  const [expandedRow, setExpandedRow] = useState(null);
+  const navigate = useNavigate();
+  const [currentPage , setCurrentPage] = useState(1);
+  const [total , setTotal] = useState(0);
+  const [totalPages , setTotalPage]= useState(0);
+  const [loading, setLoading] = useState(false);
+
+  
+  const toggleRow = (id) => {
+    setExpandedRow((prev) => (prev === id ? null : id));
+  };
+  const handleSelect = (value) => {
+    setSelected(value);
+    getDemandes(value); // Call parent filter logic
+    setIsOpen(false);
+  };
+  const getDemandes = async (selected = "All") => {
+    try {
+      // const response = await fetch(`http://localhost:8000/api/get_my_demande `, {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      //   },
+      // });
+      // const data = await response.json();
+      // console.log("data", data.demandes);
+      // if (!response.ok) {
+      //   setErrorBack("No data found or error lors de recuperation des donnees");
+      // }
+
+      // setDemandes(data.demandes);
+      const response = await fetch(`http://localhost:3001/api/demandes/mes-demandes `, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await response.json();
+      console.log("data", data);
+      if (!response.ok) {
+        setErrorBack("No data found or error lors de recuperation des donnees");
+      }
+
+      setDemandes(data.demandes);
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+  useEffect(() => {
+    getDemandes();
+  }, []);
+  return (
+    <>
+      <div className="p-4 min-h-[90vh] flex flex-col content">
+        <div className="mt-16 text-2xl font-bold self-center ">
+          Votre demande d'accès
+        </div>
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-16 ">
+          <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 mb-8 ">
+            {/* <div className="  inline-block text-left">
+                            <button
+                              onClick={() => setIsOpen(!isOpen)}
+                              className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                              type="button"
+                            >
+                              <svg
+                                className="w-3 h-3 text-gray-500 dark:text-gray-400 me-3"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
+                              </svg>
+                              {selected}
+                              <svg
+                                className="w-2.5 h-2.5 ms-2.5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 10 6"
+                              >
+                                <path
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="m1 1 4 4 4-4"
+                                />
+                              </svg>
+                            </button>
+                
+                            {isOpen && (
+                              <div className="absolute left-0 ml-16 z-10 mt-2 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800">
+                                <div className="py-1">
+                                  {["All", "Pending", "Accepted", "Rejected"].map((option) => (
+                                    <button
+                                      key={option}
+                                      onClick={() => handleSelect(option)}
+                                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 w-full text-left"
+                                    >
+                                      {option}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div> */}
+
+            {/* end drop down menu  */}
+
+            {/* <label htmlFor="table-search" className="sr-only">
+                            Search
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
+                              <svg
+                                className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                aria-hidden="true"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                  clipRule="evenodd"
+                                ></path>
+                              </svg>
+                            </div>
+                            <input
+                              type="text"
+                              id="table-search"
+                              className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              placeholder="Search for items"
+                            />
+                          </div> */}
+            <div></div>
+            <div className="my-4 mx-3  ">
+              <button
+                className="bg-violet-500 font-semibold text-white py-2 px-4 rounded-lg  hover:scale-105 transform  duration-75"
+                onClick={() => {
+                  navigate("/demande");
+                }}
+              >
+                nouveau Demande
+              </button>
+            </div>
+          </div>
+          {errorBack || demandes?.length === 0 ? (
+            <>
+              <div className="flex justify-center">
+                <img src="/noData.png" />
+              </div>
+            </>
+          ) : (
+            <>
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" className="px-6 py-3">
+                      Nom/Prenom
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Direction
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Directeur Bu
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      SpocData
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      SpocDt
+                    </th>
+                    {/* <th scope="col" className="px-6 py-3">
+                                    InterneExterne
+                                  </th> */}
+                    <th scope="col" className="px-6 py-3">
+                      Environnement
+                    </th>
+
+                    {/* <th scope="col" className="px-6 py-3">
+                      Schema
+                    </th> */}
+
+                    <th scope="col" className="px-6 py-3">
+                      Finalite access
+                    </th>
+                    {/* <th scope="col" className="px-6 py-3">
+                                    Details usage
+                                  </th> */}
+                    {/* <th scope="col" className="px-6 py-3">
+                                    Duree acces
+                                  </th> */}
+                    {/* <th scope="col" className="px-6 py-3">
+                                    Extraction
+                                  </th> */}
+                    <th scope="col" className="px-6 py-3">
+                      Demandeur
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Bussiness owner
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Date
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Status
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Details
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {demandes?.map((item, index) => (
+                    <React.Fragment key={item.id}>
+                      <tr
+                        key={index}
+                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+                      >
+                        {/* <th
+                                      scope="row"
+                                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    >
+                                      {item.firstname}
+                                    </th> */}
+
+                        <td className="px-6 py-4">
+                          {item.lastname} {item.firstname}
+                        </td>
+                        <td className="px-6 py-4">{item.direction}</td>
+                        <td className="px-6 py-4">{item.directionBu}</td>
+                        <td className="px-6 py-4">{item.spocData}</td>
+                        <td className="px-6 py-4">{item.spocDt}</td>
+                        {/* <td className="px-6 py-4">{item.interneExterne}</td> */}
+                        <td className="px-6 py-4">{item.environnement}</td>
+                        {/* <td className="px-6 py-4">{item.schema}</td> */}
+                        <td className="px-6 py-4">{item.finalite_access}</td>
+                        {/* <td className="px-6 py-4">{item.Details_usage}</td> */}
+                        {/* <td className="px-6 py-4">{item.Duree_acces}</td> */}
+                        {/* <td className="px-6 py-4">{item.extraction}</td> */}
+                        <td className="px-6 py-4">{item.demandeur}</td>
+                        <td className="px-6 py-4">{item.bussiness_owner}</td>
+                        <td className="px-6 py-4 min-w-32">
+                          {new Date(item.createdAt).toLocaleString("en-US", {
+                            dateStyle: "medium",
+                            // timeStyle: "short",
+                          })}
+                        </td>
+
+                        {/* <td
+                          className={`px-6 py-4 font-semibold ${
+                            item.status === "Pending"
+                              ? "text-yellow-500"
+                              : item.status === "Accepted"
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }`}
+                        >
+                          {item.status}
+                        </td> */}
+                        <td className={`px-6 py-4 font-semibold `}>
+                          <span
+                            className={`font-semibold py-2 px-3 rounded-lg text-white ${
+                              item.status === "Pending"
+                                ? "bg-yellow-500 "
+                                : item.status === "Accepted"
+                                ? "bg-green-500"
+                                : "bg-red-500"
+                            }`}
+                          >
+                            {item.status}
+                          </span>
+                        </td>
+                        <td
+                          className="flex justify-center pt-6 "
+                          onClick={() => toggleRow(item.id)}
+                        >
+                          {item.id === expandedRow ? (
+                            <SlArrowUp />
+                          ) : (
+                            <SlArrowDown />
+                          )}
+                        </td>
+                      </tr>
+                      {expandedRow === item.id && (
+                        <tr className="bg-violet-50 border-t border-violet-200">
+                          <td colSpan="12" className="p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-gray-700">
+                              {/* Présentation du demandeur */}
+                              <div>
+                                <h4 className="font-semibold text-lg text-violet-800 mb-4">
+                                  Présentation du demandeur
+                                </h4>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Direction :
+                                  </span>{" "}
+                                  {item.direction}
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Nom/Prenom :
+                                  </span>{" "}
+                                  {item.lastname} {item.firstname}
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Directeur Bu :
+                                  </span>{" "}
+                                  {item.directionBu}
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Spoc Data :
+                                  </span>{" "}
+                                  {item.spocData}
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">Spoc Dt :</span>{" "}
+                                  {item.spocDt}
+                                </p>
+                              </div>
+
+                              {/* Détails de la demande d'accès */}
+                              <div>
+                                <h4 className="font-semibold text-lg text-violet-800 mb-4">
+                                  Détails de la demande d'accès
+                                </h4>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Environnement :
+                                  </span>{" "}
+                                  {item.environnement}
+                                </p>
+                                <p className="my-3 flex flex-row gap-2">
+                                  <span className="font-medium">
+                                    SchemaTables / Dashboard :
+                                  </span>{" "}
+                                  <div className="flex flex-row gap-2 ">
+                                    {item.schema.map((item) => (
+                                      <>
+                                        <spn>{item},</spn>
+                                      </>
+                                    ))}
+                                  </div>
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Finalité de l'accès :
+                                  </span>{" "}
+                                  {item.finalite_access}
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Détails d'usage :
+                                  </span>{" "}
+                                  {item.Details_usage}
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Durée d'accès :
+                                  </span>{" "}
+                                  {item.Duree_acces}
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Extractions ? :
+                                  </span>{" "}
+                                  {item.extraction}
+                                </p>
+                              </div>
+
+                              {/* Avis */}
+                              <div>
+                                <h4 className="font-semibold text-lg text-violet-800 mb-4">
+                                  Avis
+                                </h4>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Business Owner :
+                                  </span>{" "}
+                                  {item.bussiness_owner}
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Demandeur :
+                                  </span>{" "}
+                                  {item.demandeur}
+                                </p>
+                                <p className="my-3">
+                                  <span className="font-medium">
+                                    Statut de la demande :
+                                  </span>
+
+                                  {/* <span
+                                    className={`px-6 py-4 font-semibold ${
+                                      item.status === "Pending"
+                                        ? "text-yellow-500"
+                                        : item.status === "Accepted"
+                                        ? "text-green-500"
+                                        : "text-red-500"
+                                    }`}
+                                  >
+                                    {item.status}
+                                  </span> */}
+                                  <span
+                                    className={`font-semibold py-2 px-3 rounded-lg text-white ${
+                                      item.status === "Pending"
+                                        ? "bg-yellow-500 "
+                                        : item.status === "Accepted"
+                                        ? "bg-green-500"
+                                        : "bg-red-500"
+                                    }`}
+                                  >
+                                    {item.status}
+                                  </span>
+                                </p>
+                                <p>
+                                  <span className="font-meduim">date : </span>
+                                  {new Date(item.createdAt).toLocaleString(
+                                    "en-US",
+                                    {
+                                      dateStyle: "medium",
+                                      // timeStyle: "short",
+                                    }
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
