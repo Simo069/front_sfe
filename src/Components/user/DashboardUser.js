@@ -6,28 +6,40 @@ import { useNavigate } from "react-router-dom";
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
 
+import axios from "axios";
+
 export default function DashboardUser() {
   const [demandes, setDemandes] = useState([]);
   const [errorBack, setErrorBack] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("All");
+  const [selected, setSelected] = useState("");
   const [expandedRow, setExpandedRow] = useState(null);
   const navigate = useNavigate();
-  const [currentPage , setCurrentPage] = useState(1);
-  const [total , setTotal] = useState(0);
-  const [totalPages , setTotalPage]= useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPage] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
-  
+  const statusOptions = [
+    { value: "", label: "toute" },
+    { value: "EN_ATTENTE", label: "EN_ATTENTE" },
+    { value: "APPROUVEE", label: "APPROUVEE" },
+    { value: "REJETEE", label: "REJETEE" },
+    // { value: "Rejected", label: "Rejected" },
+  ];
   const toggleRow = (id) => {
     setExpandedRow((prev) => (prev === id ? null : id));
+  };
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
   const handleSelect = (value) => {
     setSelected(value);
     getDemandes(value); // Call parent filter logic
     setIsOpen(false);
   };
-  const getDemandes = async (selected = "All") => {
+  const getDemandes = async () => {
     try {
       // const response = await fetch(`http://localhost:8000/api/get_my_demande `, {
       //   method: "GET",
@@ -43,27 +55,52 @@ export default function DashboardUser() {
       // }
 
       // setDemandes(data.demandes);
-      const response = await fetch(`http://localhost:3001/api/demandes/mes-demandes `, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      const data = await response.json();
-      console.log("data", data);
-      if (!response.ok) {
+      const params = {
+        page: currentPage,
+      };
+
+      if (selected) params.status = selected;
+      if (searchText.trim()) params.search = searchText.trim();
+
+      // const response = await fetch(
+      //   `http://localhost:3001/api/demandes/mes-demandes `,
+      //   {
+      //     method: "GET",
+
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //     },
+      //     body : JSON.stringify({params}),
+      //   }
+      // );
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACK_URL}/api/demandes/mes-demandes`,
+        {
+          params: params,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("response", response);
+
+      if (!response.data.success) {
         setErrorBack("No data found or error lors de recuperation des donnees");
       }
-
-      setDemandes(data.demandes);
+      setDemandes(response.data.demandes);
+      setTotalPage(response.data.pagination.totalPages);
+      setTotal(response.data.pagination.total);
     } catch (error) {
       console.error("error", error);
     }
   };
   useEffect(() => {
     getDemandes();
-  }, []);
+  }, [selected, searchText, currentPage]);
   return (
     <>
       <div className="p-4 min-h-[90vh] flex flex-col content">
@@ -71,84 +108,86 @@ export default function DashboardUser() {
           Votre demande d'accès
         </div>
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-16 ">
-          <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 mb-8 ">
-            {/* <div className="  inline-block text-left">
-                            <button
-                              onClick={() => setIsOpen(!isOpen)}
-                              className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                              type="button"
-                            >
-                              <svg
-                                className="w-3 h-3 text-gray-500 dark:text-gray-400 me-3"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
-                              </svg>
-                              {selected}
-                              <svg
-                                className="w-2.5 h-2.5 ms-2.5"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 10 6"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="m1 1 4 4 4-4"
-                                />
-                              </svg>
-                            </button>
-                
-                            {isOpen && (
-                              <div className="absolute left-0 ml-16 z-10 mt-2 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800">
-                                <div className="py-1">
-                                  {["All", "Pending", "Accepted", "Rejected"].map((option) => (
-                                    <button
-                                      key={option}
-                                      onClick={() => handleSelect(option)}
-                                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 w-full text-left"
-                                    >
-                                      {option}
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div> */}
+          <div className="flex flex-col sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 mb-8 ">
+            <div className="  inline-block text-left">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                type="button"
+              >
+                <svg
+                  className="w-3 h-3 text-gray-500 dark:text-gray-400 me-3"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
+                </svg>
+                {selected === "" ? "toute" : selected}
+                <svg
+                  className="w-2.5 h-2.5 ms-2.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+
+              {isOpen && (
+                <div className="absolute left-0 ml-16 z-10 mt-2 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800">
+                  <div className="py-1">
+                    {statusOptions.map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => handleSelect(option.value)}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 w-full text-left"
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* end drop down menu  */}
 
-            {/* <label htmlFor="table-search" className="sr-only">
-                            Search
-                          </label>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-                              <svg
-                                className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                                aria-hidden="true"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                  clipRule="evenodd"
-                                ></path>
-                              </svg>
-                            </div>
-                            <input
-                              type="text"
-                              id="table-search"
-                              className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                              placeholder="Search for items"
-                            />
-                          </div> */}
-            <div></div>
+            <label htmlFor="table-search" className="sr-only">
+              Search
+            </label>
+            <div className="flex items-center flex-col sm:flex-row">
+              <div className="relative">
+              <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
+                <svg
+                  className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+              <input
+                type="text"
+                id="table-search"
+                onChange={(e) => setSearchText(e.target.value)}
+                className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search for items"
+              />
+              
+            </div>
             <div className="my-4 mx-3  ">
               <button
                 className="bg-violet-500 font-semibold text-white py-2 px-4 rounded-lg  hover:scale-105 transform  duration-75"
@@ -159,6 +198,10 @@ export default function DashboardUser() {
                 nouveau Demande
               </button>
             </div>
+            </div>
+            
+            
+            
           </div>
           {errorBack || demandes?.length === 0 ? (
             <>
@@ -241,7 +284,7 @@ export default function DashboardUser() {
                                     </th> */}
 
                         <td className="px-6 py-4">
-                          {item.lastname} {item.firstname}
+                          {item.lastName} {item.firstName}
                         </td>
                         <td className="px-6 py-4">{item.direction}</td>
                         <td className="px-6 py-4">{item.directionBu}</td>
@@ -250,12 +293,12 @@ export default function DashboardUser() {
                         {/* <td className="px-6 py-4">{item.interneExterne}</td> */}
                         <td className="px-6 py-4">{item.environnement}</td>
                         {/* <td className="px-6 py-4">{item.schema}</td> */}
-                        <td className="px-6 py-4">{item.finalite_access}</td>
+                        <td className="px-6 py-4">{item.finaliteAccess}</td>
                         {/* <td className="px-6 py-4">{item.Details_usage}</td> */}
                         {/* <td className="px-6 py-4">{item.Duree_acces}</td> */}
                         {/* <td className="px-6 py-4">{item.extraction}</td> */}
                         <td className="px-6 py-4">{item.demandeur}</td>
-                        <td className="px-6 py-4">{item.bussiness_owner}</td>
+                        <td className="px-6 py-4">{item.businessOwner}</td>
                         <td className="px-6 py-4 min-w-32">
                           {new Date(item.createdAt).toLocaleString("en-US", {
                             dateStyle: "medium",
@@ -317,7 +360,7 @@ export default function DashboardUser() {
                                   <span className="font-medium">
                                     Nom/Prenom :
                                   </span>{" "}
-                                  {item.lastname} {item.firstname}
+                                  {item.lastName} {item.firstName}
                                 </p>
                                 <p className="my-3">
                                   <span className="font-medium">
@@ -364,19 +407,19 @@ export default function DashboardUser() {
                                   <span className="font-medium">
                                     Finalité de l'accès :
                                   </span>{" "}
-                                  {item.finalite_access}
+                                  {item.finaliteAccess}
                                 </p>
                                 <p className="my-3">
                                   <span className="font-medium">
                                     Détails d'usage :
                                   </span>{" "}
-                                  {item.Details_usage}
+                                  {item.detailsUsage}
                                 </p>
                                 <p className="my-3">
                                   <span className="font-medium">
                                     Durée d'accès :
                                   </span>{" "}
-                                  {item.Duree_acces}
+                                  {item.dureeAcces}
                                 </p>
                                 <p className="my-3">
                                   <span className="font-medium">
@@ -395,7 +438,7 @@ export default function DashboardUser() {
                                   <span className="font-medium">
                                     Business Owner :
                                   </span>{" "}
-                                  {item.bussiness_owner}
+                                  {item.businessOwner}
                                 </p>
                                 <p className="my-3">
                                   <span className="font-medium">
@@ -450,6 +493,47 @@ export default function DashboardUser() {
                   ))}
                 </tbody>
               </table>
+              {/* Pagination */}
+              <div className="px-6 py-4 border-t border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="text-sm text-gray-700">
+                    Showing{" "}
+                    {demandes.length > 0 ? (currentPage - 1) * 5 + 1 : 0} to{" "}
+                    {Math.min(currentPage * 5, total)} of {total} results
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      Previous
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`px-3 py-1 border rounded-md text-sm font-semibold ${
+                            currentPage === page
+                              ? "bg-violet-500 text-white border-violbg-violet-500"
+                              : "border-gray-300 hover:bg-gray-50"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    )}
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>

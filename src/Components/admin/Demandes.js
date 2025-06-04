@@ -10,7 +10,7 @@ export default function Demandes() {
   const [errorBack, setErrorBack] = useState("");
   const [successBack, setSuccessBack] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("All");
+  const [selected, setSelected] = useState("");
   const [expandedRow, setExpandedRow] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [status, setStatus] = useState("");
@@ -27,6 +27,7 @@ export default function Demandes() {
     { value: "REJETEE", label: "REJETEE" },
     // { value: "Rejected", label: "Rejected" },
   ];
+  console.log(localStorage.getItem("token"))
 
   const handleSearch = (e) => {
     setSearchText(e.target.value);

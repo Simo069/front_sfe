@@ -1,21 +1,32 @@
 import React from "react";
-import { useState, useEffect , useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,  useLocation } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
 
 function Login() {
+  const location = useLocation();
+  const { login, isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+  // if (isAuthenticated) {
+  //   // Redirect to the previous page if available, or fallback
+  //   if (user.roles.includes("user")) {
+  //     navigate("/");
+  //   } else if (user.roles.includes("admin")) {
+  //     navigate("/admin-Dashboard");
+  //   }
+  // }
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
-  const { login } = useAuth();
 
   const [errorBack, setErrorBack] = useState("");
   const [success, setSuccess] = useState("");
-  const navigate = useNavigate();
+  
   const validate = () => {
     const newErrors = {};
 
@@ -91,8 +102,6 @@ function Login() {
   //   }
   // };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -110,25 +119,24 @@ function Login() {
             setErrorBack("");
           }, 3000);
           setTimeout(() => {
-            
             setErrorBack("");
           }, 2000);
           return;
-        }else{
+        } else {
           const roles = result.roles || [];
-          
+
           setSuccess(result.message || "you are logged successfully");
           setFormData({
             username: "",
             password: "",
           });
           setTimeout(() => {
-            if (roles.includes('user')) {
+            if (roles.includes("user")) {
               navigate("/");
-            } else if (roles.includes('admin')) {
+            } else if (roles.includes("admin")) {
               navigate("/admin-Dashboard");
             }
-            
+
             setSuccess("");
           }, 2000);
         }
@@ -140,8 +148,6 @@ function Login() {
       }
     }
   };
-
-
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -191,7 +197,7 @@ function Login() {
           <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:border-gray-700  ">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              connexion
+                connexion
               </h1>
               <form className="space-y-4 md:space-y-6 " onSubmit={handleSubmit}>
                 <div className="flex flex-col items-start ">
@@ -240,17 +246,20 @@ function Login() {
                   se connecter
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                vous n’avez pas de compte?{" "}
+                  vous n’avez pas de compte?{" "}
                   <Link
                     to="/register"
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     inscription ici
                   </Link>
-
                 </p>
 
-                <button onClick={()=> { window.location.href = 'http://localhost:3000/login';}}>
+                <button
+                  onClick={() => {
+                    window.location.href = "http://localhost:3000/login";
+                  }}
+                >
                   keycloak
                 </button>
               </form>

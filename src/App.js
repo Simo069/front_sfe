@@ -15,6 +15,8 @@ import DashboardAdmin from "./Components/admin/Dashboard-admin";
 import Demandes from "./Components/admin/Demandes";
 import Dashboard from "./Components/admin/Dashboard-admin";
 
+import RestrictRoute from "./Components/RestrictRoutes";
+
 function App() {
   return (
     <BrowserRouter>
@@ -65,18 +67,18 @@ function App() {
             <Route
               path="/login"
               element={
-                <PublicRoute>
+                <RestrictRoute>
                   <Login />
-                </PublicRoute>
+                </RestrictRoute>
               }
             />
 
             <Route
               path="/register"
               element={
-                <PublicRoute>
+                <RestrictRoute>
                   <Register />
-                </PublicRoute>
+                </RestrictRoute>
               }
             />
             <Route path="/unauthorized" element={<Unauthorized />} />
