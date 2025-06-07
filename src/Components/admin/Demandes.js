@@ -547,7 +547,7 @@ export default function Demandes() {
             <div className="px-6 py-4 border-t border-gray-200">
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-700">
-                  Showing {demandes.length > 0 ? (currentPage - 1) * 5 + 1 : 0}{" "}
+                  Showing {demandes.length > 0 ? (currentPage - 1) * 10 + 1 : 0}{" "}
                   to {Math.min(currentPage * 5, total)} of {total} results
                 </div>
                 <div className="flex space-x-2">

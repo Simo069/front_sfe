@@ -120,10 +120,26 @@ function Header() {
                   </li>
                   <li>
                     <Link
-                      to="/admin-Dashboard"
+                      to="/admin-Dashboard/managers"
                       className="block py-2 pr-4 pl-3 text-gray-700 hover:text-primary-700 lg:p-0 dark:text-gray-400 dark:hover:text-white"
                     >
-                      Contact
+                      Managers
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin-Dashboard/users"
+                      className="block py-2 pr-4 pl-3 text-gray-700 hover:text-primary-700 lg:p-0 dark:text-gray-400 dark:hover:text-white"
+                    >
+                      Users
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin-Dashboard/departements"
+                      className="block py-2 pr-4 pl-3 text-gray-700 hover:text-primary-700 lg:p-0 dark:text-gray-400 dark:hover:text-white"
+                    >
+                      Departements
                     </Link>
                   </li>
                 </ul>

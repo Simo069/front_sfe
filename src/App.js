@@ -16,6 +16,9 @@ import Demandes from "./Components/admin/Demandes";
 import Dashboard from "./Components/admin/Dashboard-admin";
 
 import RestrictRoute from "./Components/RestrictRoutes";
+import Users from "./Components/admin/users";
+import Departements from "./Components/admin/Departements";
+import Managers from "./Components/admin/Managers";
 
 function App() {
   return (
@@ -58,6 +61,30 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['admin']}>
                     <Demandes />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin-Dashboard/users"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Users />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin-Dashboard/departements"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Departements />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin-Dashboard/managers"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Managers />
                   </ProtectedRoute>
                 }
               />
