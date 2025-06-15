@@ -135,6 +135,8 @@ function Login() {
               navigate("/");
             } else if (roles.includes("admin")) {
               navigate("/admin-Dashboard");
+            }else if (roles.includes("manager")){
+              navigate("/manager-dashboard");
             }
 
             setSuccess("");

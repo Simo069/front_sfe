@@ -5,7 +5,7 @@ import Login from "./Components/Login";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Formulaire from "./Components/Forms";
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./Components/ProtectedRoute";
 
 import Unauthorized from "./Components/Unauthorized";
@@ -19,6 +19,8 @@ import RestrictRoute from "./Components/RestrictRoutes";
 import Users from "./Components/admin/users";
 import Departements from "./Components/admin/Departements";
 import Managers from "./Components/admin/Managers";
+import DemandeManager from "./Components/manager/demandeManager";
+
 
 function App() {
   return (
@@ -31,7 +33,7 @@ function App() {
               <Route
                 path=""
                 element={
-                  <ProtectedRoute allowedRoles={['user']}>
+                  <ProtectedRoute allowedRoles={["user"]}>
                     {" "}
                     <DashboardUser />{" "}
                   </ProtectedRoute>
@@ -40,7 +42,7 @@ function App() {
               <Route
                 path="/demande"
                 element={
-                  <ProtectedRoute allowedRoles={['admin' , 'user' , 'manager']}>
+                  <ProtectedRoute allowedRoles={["admin", "user", "manager"]}>
                     <Formulaire />
                   </ProtectedRoute>
                 }
@@ -51,7 +53,7 @@ function App() {
               <Route
                 path=""
                 element={
-                  <ProtectedRoute allowedRoles={['admin']}>
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <Dashboard />
                   </ProtectedRoute>
                 }
@@ -59,7 +61,7 @@ function App() {
               <Route
                 path="/admin-Dashboard/demandes"
                 element={
-                  <ProtectedRoute allowedRoles={['admin']}>
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <Demandes />
                   </ProtectedRoute>
                 }
@@ -67,7 +69,7 @@ function App() {
               <Route
                 path="/admin-Dashboard/users"
                 element={
-                  <ProtectedRoute allowedRoles={['admin']}>
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <Users />
                   </ProtectedRoute>
                 }
@@ -75,7 +77,7 @@ function App() {
               <Route
                 path="/admin-Dashboard/departements"
                 element={
-                  <ProtectedRoute allowedRoles={['admin']}>
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <Departements />
                   </ProtectedRoute>
                 }
@@ -83,7 +85,7 @@ function App() {
               <Route
                 path="/admin-Dashboard/managers"
                 element={
-                  <ProtectedRoute allowedRoles={['admin']}>
+                  <ProtectedRoute allowedRoles={["admin"]}>
                     <Managers />
                   </ProtectedRoute>
                 }
@@ -91,6 +93,17 @@ function App() {
             </Route>
             {/* <Route path="/register" element={ <publicRoute> <Register /></publicRoute> } />
             <Route path="/login" element={ <publicRoute><Login /></publicRoute> } /> */}
+
+            <Route path="/manager-dashboard">
+              <Route
+                path=""
+                element={
+                  <ProtectedRoute allowedRoles={["manager"]}>
+                    <DemandeManager/>
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
             <Route
               path="/login"
               element={
@@ -99,7 +112,6 @@ function App() {
                 </RestrictRoute>
               }
             />
-
             <Route
               path="/register"
               element={
@@ -116,4 +128,3 @@ function App() {
   );
 }
 export default App;
-

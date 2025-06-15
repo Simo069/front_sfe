@@ -187,9 +187,9 @@ const Departements = () => {
     setShowModal(false);
     setFormData({
       name: "",
-      manager: "",
-      employees: "",
+      description: "",
     });
+    getDepartements();
   };
 
   const handleInputChange = (e) => {
@@ -232,7 +232,7 @@ const Departements = () => {
         setTimeout(() => {
           setSuccessBack("");
         }, 2000);
-        getDepartements();
+        await getDepartements();
       } else if (!data.success) {
         setErrorBack(data.message);
         setTimeout(() => {
@@ -504,7 +504,7 @@ const Departements = () => {
                 <X size={24} />
               </button>
             </div>
-
+            x
             <div className="space-y-4 mt-12">
               <div className="flex flex-col">
                 <label className="block text-sm font-medium text-gray-700 mb-1 self-start">

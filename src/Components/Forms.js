@@ -76,9 +76,7 @@ function Step1({ formData, setFormData, onNext }) {
       serError("");
     }
   }, [formData]);
-  useEffect(() => {
-    console.log("access_token :", localStorage.getItem("token"));
-  }, []);
+
   return (
     <>
       <div className="flex flex-col min-h-[65vh] justify-center">
