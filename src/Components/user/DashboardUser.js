@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { SlArrowDown } from "react-icons/sl";
 import { SlArrowUp } from "react-icons/sl";
-
+import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   User,
@@ -20,8 +20,110 @@ import {
   Paperclip,
   Download,
 } from "lucide-react";
+import { Eye, AlertCircle } from "lucide-react";
 
 const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Function to handle file download
+  const handleDownloadAttachment = async (file) => {
+    setDownloadLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/demandes/file/${demande.id}?download=true`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erreur lors du téléchargement");
+      }
+
+      // Create blob from response
+      const blob = await response.blob();
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = file.name;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erreur de téléchargement:", error);
+      setError(error.message || "Erreur lors du téléchargement du fichier");
+    } finally {
+      setDownloadLoading(false);
+    }
+  };
+
+  // Function to handle file preview
+  const handlePreviewAttachment = (file) => {
+    const previewUrl = `http://localhost:3001/api/demandes/file/${demande.id}`;
+
+    // Add authorization header by opening in new window with fetch
+    fetch(previewUrl, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, "_blank");
+        // Note: URL will be revoked when the new window is closed
+      })
+      .catch((error) => {
+        console.error("Erreur de prévisualisation:", error);
+        setError("Erreur lors de la prévisualisation du fichier");
+      });
+  };
+
+  // Function to get file extension
+  const getFileExtension = (filename) => {
+    return filename ? filename.split(".").pop().toLowerCase() : "";
+  };
+
+  // Function to check if file can be previewed
+  const canPreviewFile = (filename) => {
+    const extension = getFileExtension(filename);
+    const previewableExtensions = ["pdf", "png", "jpg", "jpeg", "gif", "txt"];
+    return previewableExtensions.includes(extension);
+  };
+
+  // Function to get file icon based on extension
+  const getFileIcon = (filename) => {
+    const extension = getFileExtension(filename);
+
+    switch (extension) {
+      case "pdf":
+        return <FileText className="h-5 w-5 mr-3 text-red-500" />;
+      case "png":
+      case "jpg":
+      case "jpeg":
+      case "gif":
+        return <FileText className="h-5 w-5 mr-3 text-green-500" />;
+      case "doc":
+      case "docx":
+        return <FileText className="h-5 w-5 mr-3 text-blue-500" />;
+      default:
+        return <FileText className="h-5 w-5 mr-3 text-gray-500" />;
+    }
+  };
+
+  // #####################################################################
   const getStatusBadge = (status) => {
     const statusConfig = {
       EN_ATTENTE: {
@@ -343,7 +445,7 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
           )}
 
           {/* Section Pièces jointes */}
-          {demande.attachmentName && (
+          {/* {demande.attachmentName && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h4 className="font-semibold text-lg text-gray-900 mb-4 flex items-center">
                 <Paperclip className="h-5 w-5 mr-2 text-gray-600" />
@@ -355,8 +457,8 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
                   <span className="text-sm text-gray-700 font-medium">
                     {demande.attachmentName}
                   </span>
-                </div>
-                {demande.attachmentPath && onDownloadAttachment && (
+                </div> */}
+                {/* {demande.attachmentPath && onDownloadAttachment && (
                   <button
                     onClick={() =>
                       onDownloadAttachment({
@@ -369,7 +471,89 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
                     <Download className="h-4 w-4" />
                     Télécharger
                   </button>
-                )}
+                )} */}
+                {/* {demande.attachmentPath && (
+                  <a
+                    href={demande.attachmentPath}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors text-sm font-medium"
+                  >
+                    <Download className="h-4 w-4" />
+                    Ouvrir dans un nouvel onglet
+                  </a>
+                )} */}
+                         {demande.attachmentName && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h4 className="font-semibold text-lg text-gray-900 mb-4 flex items-center">
+                <Paperclip className="h-5 w-5 mr-2 text-gray-600" />
+                Pièces jointes
+              </h4>
+
+              {/* Error message */}
+              {error && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center">
+                  <AlertCircle className="h-4 w-4 text-red-500 mr-2" />
+                  <span className="text-sm text-red-700">{error}</span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                <div className="flex items-center">
+                  {getFileIcon(demande.attachmentName)}
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-700 font-medium">
+                      {demande.attachmentName}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {getFileExtension(demande.attachmentName).toUpperCase()}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {/* Preview button - only show for previewable files */}
+                  {canPreviewFile(demande.attachmentName) && (
+                    <button
+                      onClick={() =>
+                        handlePreviewAttachment({
+                          name: demande.attachmentName,
+                          path: demande.attachmentPath,
+                        })
+                      }
+                      className="flex items-center gap-2 px-3 py-1.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg transition-colors text-sm font-medium"
+                    >
+                      <Eye className="h-4 w-4" />
+                      Aperçu
+                    </button>
+                  )}
+
+                  {/* Download button */}
+                  {demande.attachmentPath && (
+                    <button
+                      onClick={() =>
+                        handleDownloadAttachment({
+                          name: demande.attachmentName,
+                          path: demande.attachmentPath,
+                        })
+                      }
+                      disabled={downloadLoading}
+                      className="flex items-center gap-2 px-3 py-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {downloadLoading ? (
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+                      ) : (
+                        <Download className="h-4 w-4" />
+                      )}
+                      {downloadLoading ? "Téléchargement..." : "Télécharger"}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* File info */}
+              <div className="mt-3 text-xs text-gray-500">
+                <span>Fichier attaché à cette demande</span>
               </div>
             </div>
           )}
@@ -687,14 +871,14 @@ export default function DashboardUser() {
                   {demandes?.map((item, index) => (
                     <React.Fragment key={item.id}>
                       <tr className="bg-white border-b hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium text-gray-900">
-                    {item.firstName} {item.lastName}
-                  </td>
-                  <td className="px-6 py-4">{item.direction}</td>
-                  <td className="px-6 py-4">{item.environnement}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`
+                        <td className="px-6 py-4 font-medium text-gray-900">
+                          {item.firstName} {item.lastName}
+                        </td>
+                        <td className="px-6 py-4">{item.direction}</td>
+                        <td className="px-6 py-4">{item.environnement}</td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={`
       px-3 py-1 rounded-full text-xs font-medium
       ${
         item.status === "REJETEE"
@@ -704,22 +888,22 @@ export default function DashboardUser() {
           : "bg-yellow-100 text-yellow-800"
       }
     `}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    {new Date(item.createdAt).toLocaleDateString("fr-FR")}
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => toggleRow(item.id)}
-                      className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      {expandedRow === item.id ? "Masquer" : "Détails"}
-                    </button>
-                  </td>
-                </tr>
+                          >
+                            {item.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          {new Date(item.createdAt).toLocaleDateString("fr-FR")}
+                        </td>
+                        <td className="px-6 py-4">
+                          <button
+                            onClick={() => toggleRow(item.id)}
+                            className="text-blue-600 hover:text-blue-800 font-medium"
+                          >
+                            {expandedRow === item.id ? "Masquer" : "Détails"}
+                          </button>
+                        </td>
+                      </tr>
                       {expandedRow === item.id && (
                         // <tr className="bg-violet-50 border-t border-violet-200">
                         //   <td colSpan="12" className="p-6">

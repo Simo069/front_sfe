@@ -20,6 +20,7 @@ import Users from "./Components/admin/users";
 import Departements from "./Components/admin/Departements";
 import Managers from "./Components/admin/Managers";
 import DemandeManager from "./Components/manager/demandeManager";
+import UserProfileManager from "./Components/Profile";
 
 
 function App() {
@@ -118,6 +119,14 @@ function App() {
                 <RestrictRoute>
                   <Register />
                 </RestrictRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                
+                  <UserProfileManager />
+                
               }
             />
             <Route path="/unauthorized" element={<Unauthorized />} />

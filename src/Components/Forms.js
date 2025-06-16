@@ -599,81 +599,67 @@ function Step3({ formData, setFormData, onNext, onPrev }) {
     setErrors(newErrors);
   }, [formData]);
 
-  const handleNext = async (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
+// Frontend - Corrected version
+const handleNext = async () => {
+  try {
+    // Create FormData object to handle file upload
+    const formDataToSend = new FormData();
+    
+    // Append all form fields
+    formDataToSend.append('demandeur', formData.demandeur);
+    formDataToSend.append('firstName', formData.firstName);
+    formDataToSend.append('lastName', formData.lastName);
+    formDataToSend.append('Details_usage', formData.Details_usage);
+    formDataToSend.append('Duree_acces', formData.Duree_acces);
+    formDataToSend.append('bussiness_owner', formData.bussiness_owner);
+    formDataToSend.append('date_debut', formData.date_debut);
+    formDataToSend.append('date_fin', formData.date_fin);
+    formDataToSend.append('direction', formData.direction);
+    formDataToSend.append('directionBu', formData.directionBu);
+    formDataToSend.append('environnement', formData.environnement);
+    formDataToSend.append('extraction', formData.extraction);
+    formDataToSend.append('finalite_access', formData.finalite_access);
+    formDataToSend.append('interneExterne', formData.interneExterne);
+    
+    // Handle schema array - convert to JSON string
+    formDataToSend.append('schema', JSON.stringify(formData.schema));
+    
+    // Handle file attachment
+    if (formData.attachment && formData.attachment instanceof File) {
+      formDataToSend.append('attachment', formData.attachment);
+    }
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    const response = await fetch(`http://localhost:3001/api/demandes/create`, {
+      method: "POST",
+      headers: {
+        // Remove Content-Type header - let browser set it with boundary for FormData
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formDataToSend, // Use FormData instead of JSON.stringify
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      setErrorBack(data.message || data.detail);
+      setTimeout(() => {
+        setErrorBack("");
+        navigate("/");
+      }, 2000);
+      console.log("data : ", data);
       return;
     }
-
-    // if (!formData.demandeur || !formData.bussiness_owner) {
-    //   setError("Tous les champs marques sont obligatoires.");
-    //   return;
-    // }
-    console.log("formdata::", formData);
-    try {
-      // const response = await fetch(`http://localhost:8000/api/new_demande/`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      //   },
-      //   body: JSON.stringify(formData),
-      // });
-      // const data = await response.json();
-      // if (!response.ok) {
-      //   setErrorBack(data.detail);
-      //   setTimeout(() => {
-      //     setErrorBack("");
-      //     navigate("/");
-      //   }, 2000);
-      //   console.log("data : ", data);
-      //   return;
-      // }
-      // setSuccess(data.detail);
-      // setFormData({});
-      // onNext();
-      // setTimeout(() => {
-      //   setSuccess("");
-      // }, 2000);
-      const response = await fetch(`http://localhost:3001/api/demandes/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(formData), 
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        setErrorBack(data.detail);
-        setTimeout(() => {
-          setErrorBack("");
-          navigate("/");
-        }, 2000);
-        console.log("data : ", data);
-        return;
-      }
-      setSuccess(data.detail);
-      setFormData({});
-      onNext();
-      setTimeout(() => {
-        setSuccess("");
-      }, 2000);
-    } catch (error) {
-      console.error("Erreur lors de l'inscription :", error);
-      setErrorBack("Une erreur réseau est survenue. Veuillez réessayer.");
-    }
-  };
-
-  // useEffect(() => {
-  //   if (formData.demandeur && formData.bussiness_owner) {
-  //     setError("");
-  //   }
-  // }, [formData]);
-
+    
+    setSuccess(data.message || data.detail);
+    setFormData({});
+    onNext();
+    setTimeout(() => {
+      setSuccess("");
+    }, 2000);
+  } catch (error) {
+    console.error("Erreur lors de l'inscription :", error);
+    setErrorBack("Une erreur réseau est survenue. Veuillez réessayer.");
+  }
+};
   return (
     <>
       <div className="flex flex-col min-h-[50vh] justify-center">
@@ -862,32 +848,3 @@ export default function Formulaire() {
   );
 }
 
-// import Step from "./Step";
-
-// function Forms(props){
-//     const [step , setStep] = useState(0);
-//     const [formData , setFormData ] = useState({
-//         nom : "",
-//         email : "",
-//         password:"",
-//     })
-
-//     return(
-//         <>
-//     {step === 0 && <Step formData={formData.nom} setFormData={setFormData} />}
-//     {step === 1 && <Step formData={formData.email} setFormData={setFormData} />}
-//     {step === 2 && <Step formData={formData.password} setFormData={setFormData} />}
-
-//   <div className="flex justify-center items-center">
-//     <div className="mr-8">{step > 0 && <button onClick={()=> {setStep(step-1)}} > precedent</button>}</div>
-//     <div className="m-4">
-//         {step}
-//     </div>
-//     <div className="ml-.8">{step < 3 && <button onClick={()=> {setStep(step+1)}} > suivant</button>}</div>
-//   </div>
-//   <div className="ml-.8">{step === 2 && <button onClick={()=> {console.log("formData",formData)}} > soummetre</button>}</div>
-//         </>
-//     );
-// }
-
-// export default Forms
