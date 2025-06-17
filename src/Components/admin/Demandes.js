@@ -619,7 +619,7 @@ const ExpandedDemandeRow = ({ demande }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/demandes/file/${demande.id}?download=true`,
+        `${process.env.REACT_APP_BACK_URL}/api/demandes/file/${demande.id}?download=true`,
         {
           method: "GET",
           headers: {
@@ -657,7 +657,7 @@ const ExpandedDemandeRow = ({ demande }) => {
 
   // Function to handle file preview
   const handlePreviewAttachment = (file) => {
-    const previewUrl = `http://localhost:3001/api/demandes/file/${demande.id}`;
+    const previewUrl = `${process.env.REACT_APP_BACK_URL}/api/demandes/file/${demande.id}`;
 
     // Add authorization header by opening in new window with fetch
     fetch(previewUrl, {

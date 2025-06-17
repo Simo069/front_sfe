@@ -715,6 +715,8 @@ import {
   Clock,
 } from "lucide-react";
 
+import axios from "axios";
+
 // Données simulées pour la démonstration
 const mockData = [
   {
@@ -981,7 +983,7 @@ const mockData = [
 
 // Données pour les graphiques
 const getStatusData = (data) => {
-  const counts = { initiated: 0, Accepted: 0, Pending: 0, Rejected: 0 };
+  const counts = { EN_ATTENTE: 0, APPROUVEE: 0, REJETEE: 0 };
   data.forEach((item) => {
     counts[item.status] = (counts[item.status] || 0) + 1;
   });
@@ -1004,36 +1006,6 @@ const getEnvironmentData = (data) => {
   return Object.keys(counts).map((key) => ({ name: key, value: counts[key] }));
 };
 
-// const getMonthlyData = (data) => {
-//   const months = [
-//     "01",
-//     "02",
-//     "03",
-//     "04",
-//     "05",
-//     "06",
-//     "07",
-//     "08",
-//     "09",
-//     "10",
-//     "11",
-//     "12",
-//   ];
-//   const counts = months.reduce((acc, month) => {
-//     acc[month] = 0;
-//     return acc;
-//   }, {});
-
-//   data.forEach((item) => {
-//     const month = item.createdAt.split("/")[1];
-//     counts[month] = (counts[month] || 0) + 1;
-//   });
-
-//   return months.map((month) => ({
-//     name: month,
-//     demandes: counts[month],
-//   }));
-// };
 const getMonthlyData = (data) => {
   const monthNames = [
     "Janvier",
@@ -1076,38 +1048,66 @@ const COLORS = [
   "#ff7300",
 ];
 
+const STATUS_COLORS = {
+  APPROUVEE: "#4CAF50", // Vert
+  REJETEE: "#F44336", // Rouge
+  EN_ATTENTE: "#FFC107", // Jaune
+};
+
 const Dashboard = () => {
   const [data, setData] = useState(mockData);
   const [statusFilter, setStatusFilter] = useState("Tous");
   const [departmentFilter, setDepartmentFilter] = useState("Tous");
   const [demandes, setDemandes] = useState([]);
   const [errorBack, setErrorBack] = useState("");
+  const [loading, setLoading] = useState(false);
+  // const getDemandes = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.REACT_APP_BACK_URL}/api/get_demandes`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  //         },
+  //       }
+  //     );
+  //     const dataa = await response.json();
+  //     console.log("data", dataa);
+  //     if (!response.ok) {
+  //       setErrorBack("No data found or error lors de recuperation des donnees");
+  //       return;
+  //     }
+
+  //     setDemandes(dataa.demandes);
+  //   } catch (e) {
+  //     console.error("error ", e);
+  //   }
+  // };
 
   const getDemandes = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8000/api/get_demandes?status=All`,
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACK_URL}/api/demandes/allDemandes`,
         {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      const dataa = await response.json();
-      console.log("data", dataa);
-      if (!response.ok) {
-        setErrorBack("No data found or error lors de recuperation des donnees");
-        return;
-      }
 
-      setDemandes(dataa.demandes);
-    } catch (e) {
-      console.error("error ", e);
+      setDemandes(response.data.demandes);
+
+      console.log("response.data.demandes", response);
+    } catch (error) {
+      console.error("error demades ", error);
+      setErrorBack("failed to fetch demandes ");
+    } finally {
+      setLoading(false);
     }
   };
-
   useEffect(() => {
     getDemandes();
   }, []);
@@ -1169,7 +1169,7 @@ const Dashboard = () => {
           <div>
             <p className="text-gray-500 text-sm">Demandes clôturées</p>
             <p className="text-2xl font-bold">
-              {filteredData.filter((item) => item.status === "Accepted").length}
+              {filteredData.filter((item) => item.status === "APPROUVEE").length}
             </p>
           </div>
         </div>
@@ -1181,7 +1181,7 @@ const Dashboard = () => {
           <div>
             <p className="text-gray-500 text-sm">Demandes en cours</p>
             <p className="text-2xl font-bold">
-              {filteredData.filter((item) => item.status === "Pending").length}
+              {filteredData.filter((item) => item.status === "EN_ATTENTE").length}
             </p>
           </div>
         </div>
@@ -1247,7 +1247,7 @@ const Dashboard = () => {
         {/* Graphique par statut */}
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold mb-4">Demandes par statut</h2>
-          <ResponsiveContainer width="100%" height={300}>
+          {/* <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
                 data={statusData}
@@ -1265,6 +1265,31 @@ const Dashboard = () => {
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer> */}
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={statusData}
+                cx="50%"
+                cy="50%"
+                labelLine={true}
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="value"
+                label={({ name, percent }) =>
+                  `${name} ${(percent * 100).toFixed(0)}%`
+                }
+              >
+                {statusData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={STATUS_COLORS[entry.name] || "#8884d8"}
                   />
                 ))}
               </Pie>
