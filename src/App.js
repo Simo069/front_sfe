@@ -22,6 +22,8 @@ import Managers from "./Components/admin/Managers";
 import DemandeManager from "./Components/manager/demandeManager";
 import UserProfileManager from "./Components/Profile";
 
+import DashboardViewers from "./Components/admin/Dashboard-Viewer";
+
 
 function App() {
   return (
@@ -91,6 +93,16 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+                <Route
+    path="/admin-Dashboard/Dashboard-Viewers"
+    element={
+      <ProtectedRoute allowedRoles={["admin", "dashboard-viewer"]}>
+        <DashboardViewers />
+      </ProtectedRoute>
+    }
+  />
+
             </Route>
             {/* <Route path="/register" element={ <publicRoute> <Register /></publicRoute> } />
             <Route path="/login" element={ <publicRoute><Login /></publicRoute> } /> */}
@@ -137,3 +149,9 @@ function App() {
   );
 }
 export default App;
+
+
+
+
+  
+

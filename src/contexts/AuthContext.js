@@ -134,7 +134,7 @@ export const AuthProvider = ({ children }) => {
         setToken(tokens.access_token);
         localStorage.setItem('token', tokens.access_token);
         localStorage.setItem('refresh_token', tokens.refresh_token);
-        return { success: true,  roles : user.roles };
+        return { success: true, roles: user.roles };
       }
     } catch (error) {
       return {
@@ -155,6 +155,7 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
+
   const hasRole = (role) => {
     return user?.roles?.includes(role) || false;
   };
@@ -167,6 +168,7 @@ export const AuthProvider = ({ children }) => {
   const isAdmin = () => hasRole("admin");
   const isManager = () => hasRole("manager");
   const isUser = () => hasRole("user");
+  const isDashboardViewer = () => hasRole("dashboard-viewer"); 
 
   const logout = () => {
     setUser(null);
@@ -176,14 +178,6 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common['Authorization'];
   };
 
-  // const value = {
-  //   user,
-  //   login,
-  //   register,
-  //   logout,
-  //   loading,
-  //   isAuthenticated: !!user
-  // };
   const value = {
     user,
     login,
@@ -196,7 +190,9 @@ export const AuthProvider = ({ children }) => {
     isAdmin,
     isManager,
     isUser,
+    isDashboardViewer, 
   };
+
   return (
     <AuthContext.Provider value={value}>
       {children}

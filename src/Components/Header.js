@@ -480,7 +480,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 function Header() {
-  const { isAuthenticated, logout, isUser, isAdmin, isManager, user } =
+  const { isAuthenticated, logout, isUser, isAdmin, isManager, isDashboardViewer, user } =
     useAuth();
   const navigate = useNavigate();
   const username = user?.lastName;
@@ -532,7 +532,7 @@ function Header() {
               {username || "User"}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              {isAdmin() ? "Administrator" : isManager() ? "Manager" : "User"}
+              {isAdmin() ? "Administrator" : isManager() ? "Manager": isDashboardViewer() ? "Dashboard Viewer" : "User"}
             </p>
           </div>
           <div className="py-2">
@@ -593,6 +593,9 @@ function Header() {
             <NavLink to="/admin-Dashboard/users">Users</NavLink>
           </li>
           <li>
+            <NavLink to="/admin-Dashboard/Dashboard-Viewers">Dashboard-Viewers</NavLink>
+          </li>
+          <li>
             <NavLink to="/admin-Dashboard/departements">Departements</NavLink>
           </li>
         </ul>
@@ -603,6 +606,19 @@ function Header() {
         <ul className="flex flex-col lg:flex-row lg:space-x-2 mt-4 lg:mt-0">
           <li>
             <NavLink to="/manager-dashboard">Dashboard</NavLink>
+          </li>
+          <li>
+            <NavLink to="/profile">Profile</NavLink>
+          </li>
+        </ul>
+      );
+    }
+
+    if (isDashboardViewer()) {
+      return (
+        <ul className="flex flex-col lg:flex-row lg:space-x-2 mt-4 lg:mt-0">
+          <li>
+            <NavLink to="/admin-Dashboard">Dashboard</NavLink>
           </li>
           <li>
             <NavLink to="/profile">Profile</NavLink>

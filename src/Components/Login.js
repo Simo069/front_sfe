@@ -290,16 +290,30 @@ function Login() {
       setSuccess(result.message || "Connexion réussie!");
       setFormData({ username: "", password: "" });
 
+      // setTimeout(() => {
+      //   if (roles.includes("user")) {
+      //     navigate("/");
+      //   } else if (roles.includes("admin")) {
+      //     navigate("/admin-Dashboard");
+      //   } else if (roles.includes("manager")) {
+      //     navigate("/manager-dashboard");
+      //   }
+      //   setSuccess("");
+      // }, 1500);
+
       setTimeout(() => {
-        if (roles.includes("user")) {
-          navigate("/");
-        } else if (roles.includes("admin")) {
-          navigate("/admin-Dashboard");
-        } else if (roles.includes("manager")) {
-          navigate("/manager-dashboard");
-        }
-        setSuccess("");
-      }, 1500);
+  if (roles.includes("user")) {
+    navigate("/");
+  } else if (roles.includes("admin")) {
+    navigate("/admin-Dashboard");
+  } else if (roles.includes("manager")) {
+    navigate("/manager-dashboard");
+  } else if (roles.includes("dashboard-viewer")) {
+    navigate("/dashboard-viewer");
+  }
+  setSuccess("");
+}, 1500);
+
 
     } catch (error) {
       console.error("Erreur lors de l'authentification:", error);
