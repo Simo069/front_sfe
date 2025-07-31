@@ -33,7 +33,7 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/demandes/file/${demande.id}?download=true`,
+        `${process.env.REACT_APP_BACK_URL}/api/demandes/file/${demande.id}?download=true`,
         {
           method: "GET",
           headers: {
@@ -71,7 +71,7 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
 
   // Function to handle file preview
   const handlePreviewAttachment = (file) => {
-    const previewUrl = `http://localhost:3001/api/demandes/file/${demande.id}`;
+    const previewUrl = `${process.env.REACT_APP_BACK_URL}/api/demandes/file/${demande.id}`;
 
     // Add authorization header by opening in new window with fetch
     fetch(previewUrl, {
@@ -574,7 +574,7 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
           )}
 
           {/* Section Historique des validations */}
-          {demande.validations && demande.validations.length > 0 && (
+          {/* {demande.validations && demande.validations.length > 0 && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h4 className="font-semibold text-lg text-gray-900 mb-6 flex items-center">
                 <CheckCircle className="h-5 w-5 mr-2 text-green-600" />
@@ -647,7 +647,7 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
                 ))}
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </td>
     </tr>
@@ -690,39 +690,13 @@ export default function DashboardUser() {
   };
   const getDemandes = async () => {
     try {
-      // const response = await fetch(`http://localhost:8000/api/get_my_demande `, {
-      //   method: "GET",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      //   },
-      // });
-      // const data = await response.json();
-      // console.log("data", data.demandes);
-      // if (!response.ok) {
-      //   setErrorBack("No data found or error lors de recuperation des donnees");
-      // }
 
-      // setDemandes(data.demandes);
       const params = {
         page: currentPage,
       };
 
       if (selected) params.status = selected;
       if (searchText.trim()) params.search = searchText.trim();
-
-      // const response = await fetch(
-      //   `http://localhost:3001/api/demandes/mes-demandes `,
-      //   {
-      //     method: "GET",
-
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-      //     },
-      //     body : JSON.stringify({params}),
-      //   }
-      // );
 
       const response = await axios.get(
         `${process.env.REACT_APP_BACK_URL}/api/demandes/mes-demandes`,

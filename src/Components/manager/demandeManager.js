@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import {
   CheckCircle,
@@ -20,6 +18,7 @@ import {
   Download,
   AlertCircle,
 } from "lucide-react";
+
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -51,7 +50,7 @@ export default function DemandeManager() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/demandes/file/${demande.id}?download=true`,
+        `${process.env.REACT_APP_BACK_URL}/api/demandes/file/${demande.id}?download=true`,
         {
           method: "GET",
           headers: {
@@ -89,7 +88,7 @@ export default function DemandeManager() {
 
   // Function to handle file preview
   const handlePreviewAttachment = (demande) => {
-    const previewUrl = `http://localhost:3001/api/demandes/file/${demande.id}`;
+    const previewUrl = `${process.env.REACT_APP_BACK_URL}/api/demandes/file/${demande.id}`;
 
     // Add authorization header by opening in new window with fetch
     fetch(previewUrl, {
@@ -173,7 +172,7 @@ export default function DemandeManager() {
       setLoading(false);
     }
   };
-
+  
   const toggleExpand = (demandeId) => {
     const newExpanded = new Set(expandedDemandes);
     if (newExpanded.has(demandeId)) {
@@ -280,7 +279,7 @@ export default function DemandeManager() {
       const result = await response.json();
 
       if (result.success) {
-        setSuccessBack(result.message);
+        setSuccessBack(result.message); 
         fetchDemandes(); // Recharger les données
         closeModal();
         setTimeout(() => {

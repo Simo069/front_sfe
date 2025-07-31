@@ -26,60 +26,13 @@ const Departements = () => {
     description: "",
   });
 
-  //   const [departments, setDepartments] = useState([
-  //     {
-  //       id: 1,
-  //       name: "Technologies de l'Information",
-  //       manager: "Ahmed Benali",
-  //       employees: 25,
-  //       createdDate: "01/2020",
-  //     },
-  //     {
-  //       id: 2,
-  //       name: "Ressources Humaines",
-  //       manager: "Fatima Zahrae",
-  //       employees: 12,
-  //       createdDate: "03/2019",
-  //     },
-  //     {
-  //       id: 3,
-  //       name: "Finance et Comptabilité",
-  //       manager: "Mohamed Alami",
-  //       employees: 18,
-  //       createdDate: "05/2018",
-  //     },
-  //     {
-  //       id: 4,
-  //       name: "Marketing Digital",
-  //       manager: "Aicha Bennani",
-  //       employees: 15,
-  //       createdDate: "01/2024",
-  //     },
-  //     {
-  //       id: 5,
-  //       name: "Operations",
-  //       manager: "Youssef Kadiri",
-  //       employees: 22,
-  //       createdDate: "08/2019",
-  //     },
-  //     {
-  //       id: 6,
-  //       name: "Qualité et Contrôle",
-  //       manager: "Laila Amrani",
-  //       employees: 8,
-  //       createdDate: "11/2021",
-  //     },
-  //   ]);
+ 
 
   const [departments, setDepartments] = useState([]);
 
   const filteredData = departments;
 
-  //   // Calculs pour les statistiques
-  //   const totalEmployees = departments.reduce(
-  //     (sum, dept) => sum + dept.employees,
-  //     0
-  //   );
+  
   //   const totalManagers = departements.length;
   const totalManagers = 0;
   //   const averageEmployees = Math.round(totalEmployees / departments.length);
@@ -88,9 +41,7 @@ const Departements = () => {
   const totalEmployees = 0;
 
   const getDepartements = async () => {
-    // const params ={
-    //     search : searchText.trim()
-    // }
+   
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_BACK_URL}/api/departement/get-departements`,
@@ -306,45 +257,7 @@ const Departements = () => {
         </p>
       </div>
 
-      {/* Cartes de statistiques */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow flex items-center">
-          <div className="bg-blue-100 p-3 rounded-full mr-4">
-            <FileText size={24} className="text-blue-500" />
-          </div>
-          <div>
-            <p className="text-gray-500 text-sm">Total des départements</p>
-            <p className="text-2xl font-bold">0</p>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow flex items-center">
-          <div className="bg-green-100 p-3 rounded-full mr-4">
-            <CheckSquare size={24} className="text-green-500" />
-          </div>
-          <div>
-            <p className="text-gray-500 text-sm">Total employés</p>
-            <p className="text-2xl font-bold">{totalEmployees}</p>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow flex items-center">
-          <div className="bg-yellow-100 p-3 rounded-full mr-4">
-            <Clock size={24} className="text-yellow-500" />
-          </div>
-          <div>
-            <p className="text-gray-500 text-sm">Total managers</p>
-            <p className="text-2xl font-bold">{totalManagers}</p>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow flex items-center">
-          <div className="bg-purple-100 p-3 rounded-full mr-4">
-            <Users size={24} className="text-purple-500" />
-          </div>
-          <div>
-            <p className="text-gray-500 text-sm">Moyenne par département</p>
-            <p className="text-2xl font-bold">{averageEmployees}</p>
-          </div>
-        </div>
-      </div> */}
+      
       {errorBack && (
         <>
           <div

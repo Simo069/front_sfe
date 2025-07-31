@@ -22,7 +22,6 @@ import Managers from "./Components/admin/Managers";
 import DemandeManager from "./Components/manager/demandeManager";
 import UserProfileManager from "./Components/Profile";
 
-
 function App() {
   return (
     <BrowserRouter>
@@ -92,15 +91,13 @@ function App() {
                 }
               />
             </Route>
-            {/* <Route path="/register" element={ <publicRoute> <Register /></publicRoute> } />
-            <Route path="/login" element={ <publicRoute><Login /></publicRoute> } /> */}
 
             <Route path="/manager-dashboard">
               <Route
                 path=""
                 element={
                   <ProtectedRoute allowedRoles={["manager"]}>
-                    <DemandeManager/>
+                    <DemandeManager />
                   </ProtectedRoute>
                 }
               />
@@ -124,9 +121,9 @@ function App() {
             <Route
               path="/profile"
               element={
-                
+                <ProtectedRoute allowedRoles={["admin", "user", "manager"]}>
                   <UserProfileManager />
-                
+                </ProtectedRoute>
               }
             />
             <Route path="/unauthorized" element={<Unauthorized />} />

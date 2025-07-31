@@ -12,6 +12,7 @@ import {
   Plus,
   Check,
   Building,
+  AlertCircle,
 } from "lucide-react";
 
 const Managers = () => {
@@ -20,6 +21,7 @@ const Managers = () => {
   const [departements, setDepartements] = useState([]);
   const [selected, setSelected] = useState("");
   const [managers, setManagers] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const getDepartements = async () => {
     try {
@@ -93,64 +95,8 @@ const Managers = () => {
     email: "",
     password: "",
     departemetId: "",
+    orders: [],
   });
-
-  //   const [managers, setManagers] = useState([
-  //     {
-  //       id: 1,
-  //       name: "Ahmed Benali",
-  //       email: "ahmed.benali@company.com",
-  //       phone: "+212 6 12 34 56 78",
-  //       department: "Technologies de l'Information",
-  //       experience: "8 ans",
-  //       hireDate: "01/2020",
-  //     },
-  //     {
-  //       id: 2,
-  //       name: "Fatima Zahrae",
-  //       email: "fatima.zahrae@company.com",
-  //       phone: "+212 6 23 45 67 89",
-  //       department: "Ressources Humaines",
-  //       experience: "12 ans",
-  //       hireDate: "03/2019",
-  //     },
-  //     {
-  //       id: 3,
-  //       name: "Mohamed Alami",
-  //       email: "mohamed.alami@company.com",
-  //       phone: "+212 6 34 56 78 90",
-  //       department: "Finance et Comptabilité",
-  //       experience: "15 ans",
-  //       hireDate: "05/2018",
-  //     },
-  //     {
-  //       id: 4,
-  //       name: "Aicha Bennani",
-  //       email: "aicha.bennani@company.com",
-  //       phone: "+212 6 45 67 89 01",
-  //       department: "Marketing Digital",
-  //       experience: "6 ans",
-  //       hireDate: "01/2024",
-  //     },
-  //     {
-  //       id: 5,
-  //       name: "Youssef Kadiri",
-  //       email: "youssef.kadiri@company.com",
-  //       phone: "+212 6 56 78 90 12",
-  //       department: "Operations",
-  //       experience: "10 ans",
-  //       hireDate: "08/2019",
-  //     },
-  //     {
-  //       id: 6,
-  //       name: "Laila Amrani",
-  //       email: "laila.amrani@company.com",
-  //       phone: "+212 6 67 89 01 23",
-  //       department: "Qualité et Contrôle",
-  //       experience: "7 ans",
-  //       hireDate: "11/2021",
-  //     },
-  //   ]);
 
   const filteredData = managers.filter((manager) => {
     return (
@@ -212,7 +158,7 @@ const Managers = () => {
           }
         );
 
-        if (response.data.success) {
+        if (response.data.success) { 
           Swal.fire(
             "Modifié !",
             "Le département a été modifié avec succès.",
@@ -281,13 +227,46 @@ const Managers = () => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.firstName) {
+      newErrors.firstName = "Le prénom est obligatoire";
+    }
+    if (!formData.lastName) {
+      newErrors.lastName = "Le nom est obligatoire";
+    }
+    if (!formData.email) {
+      newErrors.email = "L'email est obligatoire";
+    }
+    if (!formData.departemetId) {
+      newErrors.departemetId = "departemet est obligatoire";
+    }
+    if (!formData.orders) {
+      newErrors.orders = "departemet est obligatoire";
+    }
+    if (!formData.password) {
+      newErrors.password = "mot de passe est obligatoire";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = async (e) => {
+    // console.log("formdata managers", formData);
+    // return;
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
     if (
       !formData.firstName ||
       !formData.lastName ||
       !formData.email ||
       !formData.departemetId ||
-      !formData.password
+      !formData.password ||
+      !formData.orders
     ) {
       setErrorBack("Veuillez remplir tous les champs");
       setTimeout(() => {
@@ -305,6 +284,7 @@ const Managers = () => {
           firstName: formData.firstName,
           lastName: formData.lastName,
           departemetId: formData.departemetId,
+          orders : formData.orders
         },
         {
           headers: {
@@ -338,6 +318,29 @@ const Managers = () => {
     }
   };
 
+  useEffect(() => {
+    const newErrors = { ...errors };
+    if (formData.firstName && errors.firstName) {
+      delete newErrors.firstName;
+    }
+    if (formData.lastName && errors.lastName) {
+      delete newErrors.lastName;
+    }
+    if (formData.email && errors.email) {
+      delete newErrors.email;
+    }
+    if (formData.password && errors.password) {
+      delete newErrors.password;
+    }
+    if (formData.departemetId && errors.departemetId) {
+      delete newErrors.departemetId;
+    }
+    if (formData.orders && errors.orders) {
+      delete newErrors.orders;
+    }
+    setErrors(newErrors);
+  }, [formData]);
+
   const handleDelete = (managerId) => {
     Swal.fire({
       title: "Êtes-vous sûr ?",
@@ -359,7 +362,6 @@ const Managers = () => {
               },
             }
           );
-
           if (response.data.success) {
             Swal.fire("Supprimé !", response.data.message, "success");
             await getManagers(); // Recharge la liste
@@ -384,7 +386,6 @@ const Managers = () => {
       [filterType]: value,
     }));
   };
-
   return (
     <div className="bg-gray-100 min-h-screen p-6 content">
       <div className="mb-6">
@@ -439,9 +440,6 @@ const Managers = () => {
         </>
       )}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden ">
-        {/* <h3 className="text-lg font-semibold text-gray-900 self-start mx-8 my-4">
-            Liste des Managers ({managers.length})
-          </h3> */}
         <div className="p-4 border-b border-gray-200 flex justify-between items-center">
           <div className="w-64">
             <select
@@ -597,7 +595,6 @@ const Managers = () => {
                 <X size={24} />
               </button>
             </div>
-
             <div className="space-y-4">
               <div className="flex flex-col">
                 <label className="block text-sm  text-gray-700 mb-1 self-start font-semibold">
@@ -609,8 +606,14 @@ const Managers = () => {
                   value={formData.firstName}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                  placeholder="Ex: Ahmed Benali"
+                  placeholder=""
                 />
+                {errors.firstName && (
+                  <p className="text-red-500 text-xs flex items-center animate-slideDown mt-2">
+                    <AlertCircle className="w-3 h-3 mr-1" />
+                    {errors.firstName}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col">
                 <label className="block text-sm  text-gray-700 mb-1 self-start font-semibold">
@@ -622,8 +625,14 @@ const Managers = () => {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                  placeholder="Ex: Ahmed Benali"
+                  placeholder=""
                 />
+                {errors.lastName && (
+                  <p className="text-red-500 text-xs flex items-center animate-slideDown mt-2">
+                    <AlertCircle className="w-3 h-3 mr-1" />
+                    {errors.lastName}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col">
                 <label className="block text-sm font-medium text-gray-700 mb-1 self-start font-semibold">
@@ -635,8 +644,14 @@ const Managers = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                  placeholder="Ex: ahmed.benali@company.com"
+                  placeholder=""
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-xs flex items-center animate-slideDown mt-2">
+                    <AlertCircle className="w-3 h-3 mr-1" />
+                    {errors.email}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col">
                 <label className="block text-sm self-start font-semibold text-gray-700 mb-1">
@@ -655,8 +670,71 @@ const Managers = () => {
                     </option>
                   ))}
                 </select>
+                {errors.departemetId && (
+                  <p className="text-red-500 text-xs flex items-center animate-slideDown mt-2">
+                    <AlertCircle className="w-3 h-3 mr-1" />
+                    {errors.departemetId}
+                  </p>
+                )}
               </div>
-
+              <div className="flex flex-col">
+                <label className="block text-sm self-start font-semibold text-gray-700 mb-1">
+                  Ordre
+                </label>
+                <div className="flex flex-col gap-2 pl-2">
+                  {[1, 2, 3, 4].map((order) => (
+                    <label
+                      key={order}
+                      className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer"
+                    >
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          checked={(formData.orders || []).includes(order)}
+                          onChange={() => {
+                            const currentOrders = formData.orders || [];
+                            const newOrders = currentOrders.includes(order)
+                              ? currentOrders.filter((o) => o !== order)
+                              : [...currentOrders, order];
+                            setFormData({ ...formData, orders: newOrders });
+                          }}
+                          className="sr-only"
+                        />
+                        <div
+                          className={`w-5 h-5 rounded flex items-center justify-center ${
+                            (formData.orders || []).includes(order)
+                              ? "bg-violet-500 border-violet-500"
+                              : "border-2 border-gray-300"
+                          }`}
+                        >
+                          {(formData.orders || []).includes(order) && (
+                            <svg
+                              className="w-3 h-3 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                      Ordre {order}
+                    </label>
+                  ))}
+                  {errors.orders && (
+                  <p className="text-red-500 text-xs flex items-center animate-slideDown mt-2">
+                    <AlertCircle className="w-3 h-3 mr-1" />
+                    {errors.orders}
+                  </p>
+                )}
+                </div>
+              </div>
               <div className="flex flex-col">
                 <label className="block text-sm self-start font-semibold text-gray-700 mb-1">
                   mot de passe
@@ -667,8 +745,14 @@ const Managers = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                  placeholder="Ex: 5 ans"
+                  placeholder=""
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-xs flex items-center animate-slideDown">
+                    <AlertCircle className="w-3 h-3 mr-1" />
+                    {errors.password}
+                  </p>
+                )}
               </div>
 
               <div className="flex space-x-3 pt-4">
