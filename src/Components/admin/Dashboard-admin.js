@@ -123,9 +123,7 @@ const Dashboard = () => {
           },
         }
       );
-
       setDemandes(response.data.demandes);
-
       console.log("response.data.demandes", response);
     } catch (error) {
       console.error("error demades ", error);

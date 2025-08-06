@@ -21,6 +21,7 @@ import Departements from "./Components/admin/Departements";
 import Managers from "./Components/admin/Managers";
 import DemandeManager from "./Components/manager/demandeManager";
 import UserProfileManager from "./Components/Profile";
+import DashboardViewers from "./Components/admin/Dashboard-Viewer";
 
 function App() {
   return (
@@ -53,7 +54,7 @@ function App() {
               <Route
                 path=""
                 element={
-                  <ProtectedRoute allowedRoles={["admin"]}>
+                  <ProtectedRoute allowedRoles={["admin", "dashboard-viewer"]}>
                     <Dashboard />
                   </ProtectedRoute>
                 }
@@ -90,6 +91,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/admin-Dashboard/Dashboard-Viewers"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "dashboard-viewer"]}>
+                    <DashboardViewers />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
 
             <Route path="/manager-dashboard">
@@ -121,11 +130,12 @@ function App() {
             <Route
               path="/profile"
               element={
-                <ProtectedRoute allowedRoles={["admin", "user", "manager"]}>
+                <ProtectedRoute allowedRoles={["admin", "user", "manager" , "dashboard-viewer"]}>
                   <UserProfileManager />
                 </ProtectedRoute>
               }
             />
+
             <Route path="/unauthorized" element={<Unauthorized />} />
           </Routes>
         </div>
