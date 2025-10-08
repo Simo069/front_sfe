@@ -420,11 +420,11 @@ export default function DemandeManager() {
                           <span className="font-medium">Direction:</span>
                           <span className="ml-1">{demande.direction}</span>
                         </div>
-                        <div className="flex items-center text-sm text-gray-600">
+                        {/* <div className="flex items-center text-sm text-gray-600">
                           <User className="h-4 w-4 mr-2" />
                           <span className="font-medium">Business Owner:</span>
                           <span className="ml-1">{demande.businessOwner}</span>
-                        </div>
+                        </div> */}
                         <div className="flex items-center text-sm text-gray-600">
                           <Calendar className="h-4 w-4 mr-2" />
                           <span className="font-medium">Date:</span>
@@ -455,14 +455,14 @@ export default function DemandeManager() {
                                   {demande.firstName} {demande.lastName}
                                 </span>
                               </div>
-                              <div className="flex justify-between">
+                              {/* <div className="flex justify-between">
                                 <span className="font-medium text-gray-600">
                                   Email:
                                 </span>
                                 <span className="text-gray-900">
                                   {demande.user.email}
                                 </span>
-                              </div>
+                              </div> */}
                               <div className="flex justify-between">
                                 <span className="font-medium text-gray-600">
                                   Direction:
@@ -479,14 +479,14 @@ export default function DemandeManager() {
                                   {demande.directionBu}
                                 </span>
                               </div>
-                              <div className="flex justify-between">
+                              {/* <div className="flex justify-between">
                                 <span className="font-medium text-gray-600">
                                   Business Owner:
                                 </span>
                                 <span className="text-gray-900">
                                   {demande.businessOwner}
                                 </span>
-                              </div>
+                              </div> */}
                               <div className="flex justify-between">
                                 <span className="font-medium text-gray-600">
                                   Type:
@@ -525,14 +525,14 @@ export default function DemandeManager() {
                                 </span>
                                 <div className="flex gap-1">
                                   {demande.schema &&
-                                    demande.schema.map((schema, index) => (
+                                    
                                       <span
-                                        key={index}
+                                        
                                         className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs"
                                       >
-                                        {schema}
+                                        {demande.schema}
                                       </span>
-                                    ))}
+                                    }
                                 </div>
                               </div>
                               <div className="flex justify-between">

@@ -48,9 +48,9 @@ function Step1({
     if (!formData.lastName) {
       newErrors.lastName = "Nom est obligatoire";
     }
-    if (!formData.directionBu) {
-      newErrors.directionBu = "Direction BU est obligatoire";
-    }
+    // if (!formData.directionBu) {
+    //   newErrors.directionBu = "Direction BU est obligatoire";
+    // }
     if (!formData.interneExterne) {
       newErrors.interneExterne = "Ce champ est obligatoire";
     }
@@ -72,9 +72,9 @@ function Step1({
     if (formData.lastName && newErrors.lastName) {
       delete newErrors.lastName;
     }
-    if (formData.directionBu && newErrors.directionBu) {
-      delete newErrors.directionBu;
-    }
+    // if (formData.directionBu && newErrors.directionBu) {
+    //   delete newErrors.directionBu;
+    // }
     if (formData.interneExterne && newErrors.interneExterne) {
       delete newErrors.interneExterne;
     }
@@ -199,7 +199,7 @@ function Step1({
         {/* Directeur BU */}
         <div className="space-y-2">
           <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            Directeur BU <span className="text-red-500">*</span>
+            Directeur BU 
           </label>
           <input
             type="text"
@@ -214,12 +214,12 @@ function Step1({
               setFormData({ ...formData, directionBu: e.target.value })
             }
           />
-          {errors.directionBu && (
+          {/* {errors.directionBu && (
             <p className="text-red-500 text-sm flex items-center gap-1">
               <AlertTriangle className="w-4 h-4" />
               {errors.directionBu}
             </p>
-          )}
+          )} */}
         </div>
 
         {/* Interne / Externe */}
@@ -477,37 +477,18 @@ function Step2({
           <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
             Type d'accès <span className="text-red-500">*</span>
           </label>
-          <div className="space-y-3 p-4 border-2 border-gray-200 rounded-xl">
-            {["Schema", "Table", "Dashboard"].map((item) => (
-              <label
-                key={item}
-                className="flex items-center gap-3 cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={formData.schema?.includes(item) || false}
-                  onChange={(e) => {
-                    const currentSchema = formData.schema || [];
-                    if (e.target.checked) {
-                      setFormData({
-                        ...formData,
-                        schema: [...currentSchema, item],
-                      });
-                    } else {
-                      setFormData({
-                        ...formData,
-                        schema: currentSchema.filter((i) => i !== item),
-                      });
-                    }
-                  }}
-                  className="w-5 h-5 text-violet-600 border-2 border-gray-300 rounded focus:ring-violet-500 focus:ring-2"
-                />
-                <span className="text-gray-700 group-hover:text-violet-600 transition-colors">
-                  {item}
-                </span>
-              </label>
-            ))}
-          </div>
+          <input
+          type="text"
+          placeholder="Type d'accès"
+          className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 focus:outline-none ${
+            errors.environnement
+              ? "border-red-300 focus:border-red-500 bg-red-50"
+              : "border-gray-200 focus:border-violet-500 hover:border-gray-300"
+          }`}
+          value={formData.schema}
+          onChange={(e)=>setFormData({...formData , schema:e.target.value})}
+
+          />
           {errors.schema && (
             <p className="text-red-500 text-sm flex items-center gap-1">
               <AlertTriangle className="w-4 h-4" />
@@ -718,9 +699,9 @@ function Step3({
       newErrors.demandeur = "Le demandeur est obligatoire";
     }
 
-    if (!formData.bussiness_owner) {
-      newErrors.bussiness_owner = "Le propriétaire d'entreprise est obligatoire";
-    }
+    // if (!formData.bussiness_owner) {
+    //   newErrors.bussiness_owner = "Le propriétaire d'entreprise est obligatoire";
+    // }
     return newErrors;
   };
 
@@ -731,9 +712,9 @@ function Step3({
       delete newErrors.demandeur;
     }
 
-    if (formData.bussiness_owner && newErrors.bussiness_owner) {
-      delete newErrors.bussiness_owner;
-    }
+    // if (formData.bussiness_owner && newErrors.bussiness_owner) {
+    //   delete newErrors.bussiness_owner;
+    // }
     setErrors(newErrors);
   }, [formData]);
 
@@ -749,7 +730,7 @@ const handleNext = async () => {
     formDataToSend.append('lastName', formData.lastName);
     formDataToSend.append('Details_usage', formData.Details_usage);
     formDataToSend.append('Duree_acces', formData.Duree_acces);
-    formDataToSend.append('bussiness_owner', formData.bussiness_owner);
+    // formDataToSend.append('bussiness_owner', formData.bussiness_owner);
     formDataToSend.append('date_debut', formData.date_debut);
     formDataToSend.append('date_fin', formData.date_fin);
     formDataToSend.append('direction', formData.direction);
@@ -916,7 +897,7 @@ const handleNext = async () => {
         </div>
 
         {/* Business Owner */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
             <Building2 className="w-4 h-4" />
             bussiness owner<span className="text-red-500">*</span>
@@ -940,7 +921,7 @@ const handleNext = async () => {
               {errors.bussiness_owner}
             </p>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* General Error */}
@@ -1071,55 +1052,7 @@ export default function Formulaire() {
     { number: 4, title: "Confirmation", icon: CheckCircle2 }
   ];
 
-  useEffect(() => {
-    const fetchPrediction = async () => {
-      // Ignorer si les champs importants ne sont pas remplis
-      const champsUtiles = Object.values(formData).filter(
-        (val) =>
-          val !== null &&
-          val !== "" &&
-          !(Array.isArray(val) && val.length === 0)
-      );
-      if (champsUtiles.length < 2) {
-        setPrediction(null);
-        return;
-      }
-
-      setLoadingPrediction(true);
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_BACK_URL}/api/predict`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          }
-        );
-
-        if (!response.ok) {
-          console.error("Erreur de prédiction :", response.statusText);
-          setPrediction(null);
-        } else {
-          const data = await response.json();
-          console.log("Réponse prediction API:", data);
-
-          setPrediction({
-            risk: data.probabiliteRejet,
-            causes: data.causesProbables || [],
-          });
-        }
-      } catch (error) {
-        console.error("Erreur réseau :", error);
-        setPrediction(null);
-      } finally {
-        setLoadingPrediction(false);
-      }
-    };
-
-    fetchPrediction();
-  }, [formData]);
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pt-28">

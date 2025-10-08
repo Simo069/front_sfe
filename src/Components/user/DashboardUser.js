@@ -216,12 +216,12 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
                   <span className="text-gray-900">{demande.direction}</span>
                 </div>
 
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                   <span className="text-sm font-medium text-gray-500 mb-1">
                     Direction BU
                   </span>
                   <span className="text-gray-900">{demande.directionBu}</span>
-                </div>
+                </div> */}
 
                 <div className="flex flex-col">
                   <span className="text-sm font-medium text-gray-500 mb-1">
@@ -277,15 +277,14 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
                     Schémas demandés
                   </span>
                   <div className="flex flex-wrap gap-2 mt-1">
-                    {demande.schema &&
-                      demande.schema.map((schema, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
-                        >
-                          {schema}
-                        </span>
-                      ))}
+                    {demande.schema && (
+                      <span
+                        
+                        className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                      >
+                        {demande.schema}
+                      </span>
+                    )}
                   </div>
                 </div>
 
