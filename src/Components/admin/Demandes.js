@@ -682,69 +682,7 @@ const Demandes = () => {
     // getDemandesest();
   };
   // Example demande data structure
-  const examledemandes = {
-    id: "12345678-1234-1234-1234-123456789012",
-    firstName: "Jean",
-    lastName: "Dupont",
-    direction: "Direction Informatique",
-    directionBu: "BU Digital",
-    businessOwner: "Marie Martin",
-    demandeur: "Jean Dupont",
-    interneExterne: "Interne",
-    environnement: "Production",
-    schema: ["USER_DATA", "ANALYTICS", "REPORTING"],
-    finaliteAccess:
-      "Analyse des données clients pour optimiser les campagnes marketing",
-    detailsUsage:
-      "Consultation des données agrégées pour création de tableaux de bord",
-    dureeAcces: "6 mois",
-    extraction: "Non",
-    dateDebut: "2024-01-15",
-    dateFin: "2024-07-15",
-    status: "EN_ATTENTE",
-    createdAt: "2024-01-10T10:30:00Z",
-    updatedAt: "2024-01-12T14:20:00Z",
-    spocData: "Validation en cours par l'équipe Data",
-    spocDt: "Validation technique approuvée",
-    attachmentName: "justification_acces.pdf",
-    attachmentPath: "/uploads/justification_acces.pdf",
-    user: {
-      firstName: "Jean",
-      lastName: "Dupont",
-      email: "jean.dupont@company.com",
-      username: "jdupont",
-    },
-    validations: [
-      {
-        ordre: 1,
-        role: "Manager",
-        status: "APPROUVEE",
-        validatedAt: "2024-01-11T09:15:00Z",
-        commentaire: "Demande justifiée et conforme aux besoins métier",
-        validateur: {
-          firstName: "Pierre",
-          lastName: "Durand",
-          email: "pierre.durand@company.com",
-        },
-      },
-      {
-        ordre: 2,
-        role: "SPOC Data",
-        status: "EN_ATTENTE",
-        validatedAt: null,
-        commentaire: null,
-        validateur: null,
-      },
-      {
-        ordre: 3,
-        role: "SPOC DT",
-        status: "EN_ATTENTE",
-        validatedAt: null,
-        commentaire: null,
-        validateur: null,
-      },
-    ],
-  };
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

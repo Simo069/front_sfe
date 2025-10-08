@@ -117,56 +117,6 @@ function Step1({
           </p>
         </div>
       </div>
-
-      {/* Prediction Display */}
-      {loadingPrediction && (
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-center gap-3">
-          <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-blue-700 font-medium">
-            Analyse de la demande en cours...
-          </span>
-        </div>
-      )}
-
-      {!loadingPrediction && prediction && (
-        <div
-          className={`mb-6 p-4 rounded-xl border ${
-            prediction.risk > 0.5
-              ? "bg-red-50 border-red-200"
-              : "bg-green-50 border-green-200"
-          }`}
-        >
-          <div className="flex items-center gap-3 mb-2">
-            {prediction.risk > 0.5 ? (
-              <AlertTriangle className="w-5 h-5 text-red-600" />
-            ) : (
-              <CheckCircle className="w-5 h-5 text-green-600" />
-            )}
-            <span
-              className={`font-semibold ${
-                prediction.risk > 0.5 ? "text-red-800" : "text-green-800"
-              }`}
-            >
-              {prediction.risk > 0.5
-                ? `Risque de rejet élevé (${(prediction.risk * 100).toFixed(
-                    1
-                  )}%)`
-                : `Risque faible (${(prediction.risk * 100).toFixed(1)}%)`}
-            </span>
-          </div>
-          <p
-            className={`text-sm ${
-              prediction.risk > 0.5 ? "text-red-700" : "text-green-700"
-            }`}
-          >
-            Causes probables :{" "}
-            {(prediction.causes || []).length > 0
-              ? prediction.causes.join(", ")
-              : "Aucune cause détectée"}
-          </p>
-        </div>
-      )}
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Nom */}
         <div className="space-y-2">

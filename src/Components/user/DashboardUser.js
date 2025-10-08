@@ -458,7 +458,7 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
                     {demande.attachmentName}
                   </span>
                 </div> */}
-                {/* {demande.attachmentPath && onDownloadAttachment && (
+          {/* {demande.attachmentPath && onDownloadAttachment && (
                   <button
                     onClick={() =>
                       onDownloadAttachment({
@@ -472,7 +472,7 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
                     Télécharger
                   </button>
                 )} */}
-                {/* {demande.attachmentPath && (
+          {/* {demande.attachmentPath && (
                   <a
                     href={demande.attachmentPath}
                     target="_blank"
@@ -483,7 +483,7 @@ const ExpandedDemandeRow = ({ demande, onDownloadAttachment }) => {
                     Ouvrir dans un nouvel onglet
                   </a>
                 )} */}
-                         {demande.attachmentName && (
+          {demande.attachmentName && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h4 className="font-semibold text-lg text-gray-900 mb-4 flex items-center">
                 <Paperclip className="h-5 w-5 mr-2 text-gray-600" />
@@ -690,7 +690,6 @@ export default function DashboardUser() {
   };
   const getDemandes = async () => {
     try {
-
       const params = {
         page: currentPage,
       };
