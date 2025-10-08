@@ -22,7 +22,7 @@ import {
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 
-export default function DemandeManager() {
+export default function DemandeAApprouver() {
   const [demandes, setDemandes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDemande, setSelectedDemande] = useState(null);
@@ -38,7 +38,6 @@ export default function DemandeManager() {
   const [successBack, setSuccessBack] = useState("");
 
   const { user } = useAuth();
-  // Simuler les données des demandes (remplacer par votre API)
 
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [error, setError] = useState("");
@@ -140,7 +139,6 @@ export default function DemandeManager() {
     }
   };
 
-  // #####################################################################
   const fetchDemandes = async () => {
     const params = {};
     if (searchTerm) {
@@ -151,7 +149,7 @@ export default function DemandeManager() {
     }
     try {
       setLoading(true);
-
+      console.log("token",localStorage.getItem("token"))
       const responce = await axios.get(
         `${process.env.REACT_APP_BACK_URL}/api/demandes/a-valider`,
         {
@@ -172,7 +170,7 @@ export default function DemandeManager() {
       setLoading(false);
     }
   };
-  
+
   const toggleExpand = (demandeId) => {
     const newExpanded = new Set(expandedDemandes);
     if (newExpanded.has(demandeId)) {
@@ -186,7 +184,6 @@ export default function DemandeManager() {
   useEffect(() => {
     fetchDemandes();
   }, [filterStatus, searchTerm]);
-
   const getStatusBadge = (status) => {
     const styles = {
       EN_ATTENTE: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -208,7 +205,6 @@ export default function DemandeManager() {
       </span>
     );
   };
-
   const openValidationModal = (demande, actionType) => {
     setSelectedDemande(demande);
     setAction(actionType);
@@ -277,7 +273,7 @@ export default function DemandeManager() {
       const result = await response.json();
 
       if (result.success) {
-        setSuccessBack(result.message); 
+        setSuccessBack(result.message);
         fetchDemandes(); // Recharger les données
         closeModal();
         setTimeout(() => {
@@ -300,8 +296,6 @@ export default function DemandeManager() {
       setIsSubmitting(false);
     }
   };
-
-
 
   if (loading) {
     return (
@@ -419,10 +413,10 @@ export default function DemandeManager() {
                           <span className="ml-1">{demande.direction}</span>
                         </div>
                         {/* <div className="flex items-center text-sm text-gray-600">
-                          <User className="h-4 w-4 mr-2" />
-                          <span className="font-medium">Business Owner:</span>
-                          <span className="ml-1">{demande.businessOwner}</span>
-                        </div> */}
+                                  <User className="h-4 w-4 mr-2" />
+                                  <span className="font-medium">Business Owner:</span>
+                                  <span className="ml-1">{demande.businessOwner}</span>
+                                </div> */}
                         <div className="flex items-center text-sm text-gray-600">
                           <Calendar className="h-4 w-4 mr-2" />
                           <span className="font-medium">Date:</span>
@@ -454,13 +448,13 @@ export default function DemandeManager() {
                                 </span>
                               </div>
                               {/* <div className="flex justify-between">
-                                <span className="font-medium text-gray-600">
-                                  Email:
-                                </span>
-                                <span className="text-gray-900">
-                                  {demande.user.email}
-                                </span>
-                              </div> */}
+                                        <span className="font-medium text-gray-600">
+                                          Email:
+                                        </span>
+                                        <span className="text-gray-900">
+                                          {demande.user.email}
+                                        </span>
+                                      </div> */}
                               <div className="flex justify-between">
                                 <span className="font-medium text-gray-600">
                                   Direction:
@@ -478,13 +472,13 @@ export default function DemandeManager() {
                                 </span>
                               </div>
                               {/* <div className="flex justify-between">
-                                <span className="font-medium text-gray-600">
-                                  Business Owner:
-                                </span>
-                                <span className="text-gray-900">
-                                  {demande.businessOwner}
-                                </span>
-                              </div> */}
+                                        <span className="font-medium text-gray-600">
+                                          Business Owner:
+                                        </span>
+                                        <span className="text-gray-900">
+                                          {demande.businessOwner}
+                                        </span>
+                                      </div> */}
                               <div className="flex justify-between">
                                 <span className="font-medium text-gray-600">
                                   Type:
@@ -522,15 +516,11 @@ export default function DemandeManager() {
                                   Schémas demandés:
                                 </span>
                                 <div className="flex gap-1">
-                                  {demande.schema &&
-                                    
-                                      <span
-                                        
-                                        className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs"
-                                      >
-                                        {demande.schema}
-                                      </span>
-                                    }
+                                  {demande.schema && (
+                                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
+                                      {demande.schema}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
                               <div className="flex justify-between">
@@ -596,29 +586,29 @@ export default function DemandeManager() {
 
                           {/* Section Justifications */}
                           {/* <div className="mb-6">
-                            <h5 className="font-medium text-gray-800 mb-3 flex items-center">
-                              <MessageSquare className="h-4 w-4 mr-2" />
-                              Justifications et usage
-                            </h5>
-                            <div className="bg-white p-4 rounded-lg border space-y-3">
-                              <div>
-                                <span className="font-medium text-gray-600 block mb-1">
-                                  Finalité de l'accès:
-                                </span>
-                                <p className="text-gray-900 bg-gray-50 p-2 rounded text-sm">
-                                  {demande.finaliteAccess || "Non spécifiée"}
-                                </p>
-                              </div>
-                              <div>
-                                <span className="font-medium text-gray-600 block mb-1">
-                                  Détails d'usage:
-                                </span>
-                                <p className="text-gray-900 bg-gray-50 p-2 rounded text-sm">
-                                  {demande.detailsUsage || "Non spécifiés"}
-                                </p>
-                              </div>
-                            </div>
-                          </div> */}
+                                    <h5 className="font-medium text-gray-800 mb-3 flex items-center">
+                                      <MessageSquare className="h-4 w-4 mr-2" />
+                                      Justifications et usage
+                                    </h5>
+                                    <div className="bg-white p-4 rounded-lg border space-y-3">
+                                      <div>
+                                        <span className="font-medium text-gray-600 block mb-1">
+                                          Finalité de l'accès:
+                                        </span>
+                                        <p className="text-gray-900 bg-gray-50 p-2 rounded text-sm">
+                                          {demande.finaliteAccess || "Non spécifiée"}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <span className="font-medium text-gray-600 block mb-1">
+                                          Détails d'usage:
+                                        </span>
+                                        <p className="text-gray-900 bg-gray-50 p-2 rounded text-sm">
+                                          {demande.detailsUsage || "Non spécifiés"}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div> */}
                           {demande.attachmentName && (
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                               <h4 className="font-semibold text-lg text-gray-900 mb-4 flex items-center">
@@ -974,7 +964,7 @@ export default function DemandeManager() {
               </div>
 
               {/* Champ SPOC Data pour les demandes IT */}
-              {user.departement.nom === "test1" && action === "APPROUVEE" && (
+              {user.departement?.nom === "test1" && action === "APPROUVEE" && (
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     SPOC Data <span className="text-red-500">*</span>

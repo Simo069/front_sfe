@@ -122,6 +122,9 @@ function Header() {
           <li>
             <NavLink to="/admin-Dashboard/departements">Departements</NavLink>
           </li>
+          <li>
+            <NavLink to="/admin-Dashboard/demandes-approuver">Demande à approuver</NavLink>
+          </li>
         </ul>
       );
     }

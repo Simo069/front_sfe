@@ -22,6 +22,7 @@ import Managers from "./Components/admin/Managers";
 import DemandeManager from "./Components/manager/demandeManager";
 import UserProfileManager from "./Components/Profile";
 import DashboardViewers from "./Components/admin/Dashboard-Viewer";
+import DemandeAApprouver from "./Components/admin/DemandeAApprouver";
 
 function App() {
   return (
@@ -96,6 +97,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={["admin", "dashboard-viewer"]}>
                     <DashboardViewers />
+                  </ProtectedRoute>
+                }
+              />
+                            <Route
+                path="/admin-Dashboard/demandes-approuver"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <DemandeAApprouver />
                   </ProtectedRoute>
                 }
               />
