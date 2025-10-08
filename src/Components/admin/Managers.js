@@ -390,7 +390,7 @@ const Managers = () => {
     <div className="bg-gray-100 min-h-screen p-6 content">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800">
-          Gestion des Managers
+          Gestion des Directeurs
         </h1>
         <p className="text-gray-600">
           Visualisation et gestion des managers de l'entreprise
@@ -398,7 +398,7 @@ const Managers = () => {
       </div>
 
       {/* Cartes de statistiques */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 max-w-4xl mx-auto">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 max-w-4xl mx-auto">
         <div className="bg-white p-6 rounded-lg shadow flex items-center">
           <div className="bg-blue-100 p-4 rounded-full mr-6">
             <Users size={28} className="text-blue-500" />
@@ -418,7 +418,9 @@ const Managers = () => {
             <p className="text-3xl font-bold">{departmentsWithManagers}</p>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      
       {errorBack && (
         <>
           <div

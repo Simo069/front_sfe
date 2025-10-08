@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   User,
@@ -218,14 +217,17 @@ const ExpandedDemandeRow = ({ demande }) => {
                   </span>
                   <span className="text-gray-900">{demande.directionBu}</span>
                 </div>
-
-                <div className="flex flex-col">
+                {
+                  demande.businessOwner && 
+                  <div className="flex flex-col">
                   <span className="text-sm font-medium text-gray-500 mb-1">
                     Business Owner
                   </span>
                   <span className="text-gray-900">{demande.businessOwner}</span>
                 </div>
-
+                }
+                
+                
                 <div className="flex flex-col">
                   <span className="text-sm font-medium text-gray-500 mb-1">
                     Demandeur
@@ -273,15 +275,11 @@ const ExpandedDemandeRow = ({ demande }) => {
                     Schémas demandés
                   </span>
                   <div className="flex flex-wrap gap-2 mt-1">
-                    {demande.schema &&
-                      demande.schema.map((schema, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
-                        >
-                          {schema}
-                        </span>
-                      ))}
+                    {demande.schema && (
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                        {demande.schema}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -308,6 +306,39 @@ const ExpandedDemandeRow = ({ demande }) => {
                     {demande.extraction}
                   </span>
                 </div>
+
+                {(demande.detailsUsage || demande.finaliteAccess) && (
+                  <>
+
+                   
+                      {demande.finaliteAccess && (
+                        <div>
+                          <span className="text-sm font-medium text-gray-500 block mb-2">
+                            Finalité de l'accès
+                          </span>
+                          <div className="  rounded-lg ">
+                            <p className="text-gray-900 text-sm leading-relaxed">
+                              {demande.finaliteAccess}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {demande.detailsUsage && (
+                        <div>
+                          <span className="text-sm font-medium text-gray-500 block mb-2">
+                            Détails d'usage
+                          </span>
+                          <div className="  rounded-lg ">
+                            <p className="text-gray-900 text-sm leading-relaxed">
+                              {demande.detailsUsage}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    
+                  </>
+                )}
 
                 <div className="flex flex-col">
                   <span className="text-sm font-medium text-gray-500 mb-1">
@@ -404,7 +435,7 @@ const ExpandedDemandeRow = ({ demande }) => {
           </div>
 
           {/* Section Justifications */}
-          {(demande.detailsUsage || demande.finaliteAccess) && (
+          {/* {(demande.detailsUsage || demande.finaliteAccess) && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h4 className="font-semibold text-lg text-gray-900 mb-4 flex items-center">
                 <MessageSquare className="h-5 w-5 mr-2 text-indigo-600" />
@@ -438,9 +469,8 @@ const ExpandedDemandeRow = ({ demande }) => {
                 )}
               </div>
             </div>
-          )}
+          )} */}
 
-         
           {demande.attachmentName && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h4 className="font-semibold text-lg text-gray-900 mb-4 flex items-center">
@@ -682,7 +712,6 @@ const Demandes = () => {
     // getDemandesest();
   };
   // Example demande data structure
-
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

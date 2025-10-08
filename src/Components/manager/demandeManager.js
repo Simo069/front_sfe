@@ -550,6 +550,22 @@ export default function DemandeManager() {
                                 </span>
                               </div>
                               <div className="flex justify-between">
+                                <span className="font-medium text-gray-600 block ">
+                                  Finalité de l'accès:
+                                </span>
+                                <p className="text-gray-900   rounded text-sm">
+                                  {demande.finaliteAccess || "Non spécifiée"}
+                                </p>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="font-medium text-gray-600 block ">
+                                  Détails d'usage:
+                                </span>
+                                <p className="text-gray-900   rounded text-sm">
+                                  {demande.detailsUsage || "Non spécifiés"}
+                                </p>
+                              </div>
+                              <div className="flex justify-between">
                                 <span className="font-medium text-gray-600">
                                   Durée d'accès:
                                 </span>
@@ -581,7 +597,7 @@ export default function DemandeManager() {
                           </div>
 
                           {/* Section Justifications */}
-                          <div className="mb-6">
+                          {/* <div className="mb-6">
                             <h5 className="font-medium text-gray-800 mb-3 flex items-center">
                               <MessageSquare className="h-4 w-4 mr-2" />
                               Justifications et usage
@@ -604,7 +620,7 @@ export default function DemandeManager() {
                                 </p>
                               </div>
                             </div>
-                          </div>
+                          </div> */}
                           {demande.attachmentName && (
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                               <h4 className="font-semibold text-lg text-gray-900 mb-4 flex items-center">
@@ -621,7 +637,7 @@ export default function DemandeManager() {
                                   </span>
                                 </div>
                               )}
-
+                                
                               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                                 <div className="flex items-center">
                                   {getFileIcon(demande.attachmentName)}
