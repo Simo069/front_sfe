@@ -24,6 +24,8 @@ import UserProfileManager from "./Components/Profile";
 
 import DashboardViewers from "./Components/admin/Dashboard-Viewer";
 
+import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
 
 function App() {
   return (
@@ -56,7 +58,7 @@ function App() {
               <Route
                 path=""
                 element={
-                  <ProtectedRoute allowedRoles={["admin"]}>
+                  <ProtectedRoute allowedRoles={["admin", "dashboard-viewer"]}>
                     <Dashboard />
                   </ProtectedRoute>
                 }
@@ -93,26 +95,22 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-
-                <Route
-    path="/admin-Dashboard/Dashboard-Viewers"
-    element={
-      <ProtectedRoute allowedRoles={["admin", "dashboard-viewer"]}>
-        <DashboardViewers />
-      </ProtectedRoute>
-    }
-  />
-
+              <Route
+                path="/admin-Dashboard/Dashboard-Viewers"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "dashboard-viewer"]}>
+                    <DashboardViewers />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
-            {/* <Route path="/register" element={ <publicRoute> <Register /></publicRoute> } />
-            <Route path="/login" element={ <publicRoute><Login /></publicRoute> } /> */}
 
             <Route path="/manager-dashboard">
               <Route
                 path=""
                 element={
                   <ProtectedRoute allowedRoles={["manager"]}>
-                    <DemandeManager/>
+                    <DemandeManager />
                   </ProtectedRoute>
                 }
               />
@@ -133,14 +131,29 @@ function App() {
                 </RestrictRoute>
               }
             />
+            <Route 
+              path="/forgot-password" 
+              element={
+                <ForgotPassword />
+              } 
+            />
+            
             <Route
               path="/profile"
               element={
-                
+                <ProtectedRoute allowedRoles={["admin", "user", "manager" , "dashboard-viewer"]}>
                   <UserProfileManager />
-                
+                </ProtectedRoute>
               }
             />
+             <Route 
+             path="/reset-password/:token" 
+             element={
+              <ResetPassword />
+              }
+            />
+
+
             <Route path="/unauthorized" element={<Unauthorized />} />
           </Routes>
         </div>

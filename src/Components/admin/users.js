@@ -22,13 +22,6 @@ const Users = () => {
 
   const [users, setUsers] = useState([]);
 
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
 
 const handleDelete = (managerId) => {
     Swal.fire({

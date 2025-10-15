@@ -1,19 +1,18 @@
-
 // import { Navigate } from "react-router-dom";
 
-// export default function PublicRoute({children}){
-//     const token = localStorage.getItem("access_token");
-//     const isAdmin = localStorage.getItem("role");
+// const PublicRoute = ({ children }) => {
+//   const token = localStorage.getItem("access_token");
 
-//     if(token && isAdmin ==="true"){
-//         return <Navigate to="/admin-dashboard"/>
-//     }else if(token){
-//         return <Navigate to="/"/>
-//     }
-//     return children;
-// }
+//   if (token) {
+//     const isAdmin = localStorage.getItem("role") === "true";
+//     return <Navigate to={isAdmin ? "/admin-Dashboard" : "/"} />;
+//   }
 
 // Components/PublicRoute.js
+//   return children;
+// };
+
+// export default PublicRoute;
 import { Navigate } from "react-router-dom";
 
 const PublicRoute = ({ children }) => {
