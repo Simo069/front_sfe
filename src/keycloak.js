@@ -1,7 +1,7 @@
 import Keycloak from 'keycloak-js';
 
 const keycloakConfig = {
-  url: 'http://localhost:4000/',
+  url: 'http://localhost:8080/',
   realm: 'realmsfe',
   clientId: 'sfeclient'
 };

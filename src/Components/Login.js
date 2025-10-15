@@ -356,16 +356,6 @@ function Login() {
       setSuccess(result.message || "Connexion réussie!");
       setFormData({ username: "", password: "" });
 
-      // setTimeout(() => {
-      //   if (roles.includes("user")) {
-      //     navigate("/");
-      //   } else if (roles.includes("admin")) {
-      //     navigate("/admin-Dashboard");
-      //   } else if (roles.includes("manager")) {
-      //     navigate("/manager-dashboard");
-      //   }
-      //   setSuccess("");
-      // }, 1500);
 
       setTimeout(() => {
   if (roles.includes("user")) {
@@ -522,6 +512,19 @@ function Login() {
                 </p>
               )}
             </div>
+
+            {/* Forgot password link */}
+          <div className="text-right mt-1">
+            <Link
+               to="/forgot-password"
+               className="text-sm text-violet-600 hover:text-purple-600 dark:text-violet-400 dark:hover:text-purple-400 transition-colors duration-200"
+           >
+             Mot de passe oublié ?
+            </Link>
+         </div>
+
+
+
 
             {/* Submit Button */}
             <button

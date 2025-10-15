@@ -23,6 +23,9 @@ import DemandeManager from "./Components/manager/demandeManager";
 import UserProfileManager from "./Components/Profile";
 import DashboardViewers from "./Components/admin/Dashboard-Viewer";
 
+import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
+
 function App() {
   return (
     <BrowserRouter>
@@ -127,6 +130,13 @@ function App() {
                 </RestrictRoute>
               }
             />
+            <Route 
+              path="/forgot-password" 
+              element={
+                <ForgotPassword />
+              } 
+            />
+            
             <Route
               path="/profile"
               element={
@@ -135,6 +145,13 @@ function App() {
                 </ProtectedRoute>
               }
             />
+             <Route 
+             path="/reset-password/:token" 
+             element={
+              <ResetPassword />
+              }
+            />
+
 
             <Route path="/unauthorized" element={<Unauthorized />} />
           </Routes>

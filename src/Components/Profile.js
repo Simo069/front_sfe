@@ -211,31 +211,48 @@ const UserProfileManager = () => {
   };
 
   //  Réinitialisation du mot de passe
+  // const resetMdp = async () => {
+  //   if (!formReset.email) {
+  //     setMessage({ type: "error", text: "Merci d’indiquer un email." });
+  //     return;
+  //   }
+  //   try {
+  //     setLoading(true);
+  //     setMessage({ type: "", text: "" });
+  //     const res = await api("/reset-password", {
+  //       method: "POST",
+  //       body: JSON.stringify({ email: formReset.email }),
+  //     });
+  //     if (res.success) {
+  //       setFormReset({ email: "" });
+  //       setMessage({
+  //         type: "success",
+  //         text: "Email de réinitialisation envoyé !",
+  //       });
+  //     }
+  //   } catch (e) {
+  //     setMessage({ type: "error", text: e.message });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const resetMdp = async () => {
-    if (!formReset.email) {
-      setMessage({ type: "error", text: "Merci d’indiquer un email." });
-      return;
-    }
-    try {
-      setLoading(true);
-      setMessage({ type: "", text: "" });
-      const res = await api("/reset-password", {
-        method: "POST",
-        body: JSON.stringify({ email: formReset.email }),
-      });
-      if (res.success) {
-        setFormReset({ email: "" });
-        setMessage({
-          type: "success",
-          text: "Email de réinitialisation envoyé !",
-        });
-      }
-    } catch (e) {
-      setMessage({ type: "error", text: e.message });
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!formReset.email) { setMessage({ type: "error", text: "Merci d’indiquer un email." }); return; }
+  try {
+    setLoading(true);
+    setMessage({ type: "", text: "" });
+    // Appel à /api/auth/forgot-password (ton backend)
+    const resp = await axios.post(`${process.env.REACT_APP_BACK_URL}/api/auth/forgot-password`, { email: formReset.email });
+    setFormReset({ email: "" });
+    setMessage({ type: "success", text: resp.data.message || "Email de réinitialisation envoyé !" });
+  } catch (err) {
+    setMessage({ type: "error", text: err.response?.data?.message || err.message });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const formatDate = (ds) => {
     if (!ds) return "Jamais";
